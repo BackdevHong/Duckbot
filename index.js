@@ -31,7 +31,7 @@ client.on(Events.ClientReady, async (client) => {
         ) {
           member.roles.remove("980761785147748373");
           client.channels.cache.get("1143484641718837318").send({
-            message: `<@${member.user.id}> 님이 미자 판정을 받았습니다.`,
+            content: `<@${member.user.id}> 님이 미자 판정을 받았습니다.`,
           });
         }
       } else if (
@@ -42,7 +42,7 @@ client.on(Events.ClientReady, async (client) => {
         ) {
           member.roles.remove("980761785147748373");
           client.channels.cache.get("1141779502704361624").send({
-            message: `<@${member.user.id}> 님이 바보 판정을 받았습니다.`,
+            content: `<@${member.user.id}> 님이 바보 판정을 받았습니다.`,
           });
         }
       }
