@@ -24,7 +24,6 @@ client.on(Events.ThreadUpdate, async (oldThread, newThread) => {
     );
 
     res.forEach((member) => {
-      member.roles.remove("980761785147748373");
       member.roles.add("1140989896220233920");
       client.channels.cache.get("1141779502704361624").send({
         content: `<@${member.user.id}> 님이 바보 판정을 받았습니다. 사유 : <#${newThread.id}>`,
