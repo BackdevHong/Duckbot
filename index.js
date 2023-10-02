@@ -61,6 +61,9 @@ client.on(Events.GuildMemberUpdate, (oldMember, newMember) => {
   ) {
     if (oldRules.cache.has("980761785147748373")) {
       oldRules.remove("980761785147748373");
+      if (oldRules.cache.has("1144269909405225021")) {
+        oldRules.remove("1144269909405225021");
+      }
     }
   }
 
@@ -72,6 +75,19 @@ client.on(Events.GuildMemberUpdate, (oldMember, newMember) => {
     client.channels.cache.get("1153229593763905566").send({
       content: `<@${oldMember.user.id}> 님의 경고가 해제되었습니다.`,
     });
+  }
+
+  // 바보 or 미짜 있는데 시청자를 받은 경우 해제
+  if (
+    !oldRules.cache.has("980761785147748373") &&
+    newRules.cache.has("980761785147748373")
+  ) {
+    if (
+      oldRules.cache.has("1144269909405225021") ||
+      oldRules.cache.has("1140989896220233920")
+    ) {
+      oldRules.remove("980761785147748373");
+    }
   }
 });
 
