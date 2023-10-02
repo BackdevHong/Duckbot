@@ -16,6 +16,17 @@ const client = new Client({
   ],
 });
 
+// 역할
+const rules_Babo = process.env.RULES_BABO;
+const rules_NoAdult = process.env.RULES_NOADULT;
+const rules_Default = process.env.RULES_DEFAULT;
+const rules_Danger = process.env.RULES_DANGER;
+
+// 채널
+const channels_Babo = process.env.CHANNEL_BABO;
+const channels_NoAdult = process.env.CHANNEL_NOADULT;
+const channels_Danger = process.env.CHANNEL_DANGER;
+
 client.on(Events.ThreadUpdate, async (oldThread, newThread) => {
   if (oldThread.locked == newThread.locked) {
     return;
@@ -29,8 +40,8 @@ client.on(Events.ThreadUpdate, async (oldThread, newThread) => {
     );
 
     res.forEach((member) => {
-      member.roles.add("1140989896220233920");
-      client.channels.cache.get("1141779502704361624").send({
+      member.roles.add(rules_Babo);
+      client.channels.cache.get(channels_Babo).send({
         content: `<@${member.user.id}> 님이 바보 판정을 받았습니다. 사유 : <#${newThread.id}>`,
       });
     });
@@ -42,52 +53,44 @@ client.on(Events.GuildMemberUpdate, (oldMember, newMember) => {
   const newRules = newMember.roles;
 
   // 미자
-  if (
-    !oldRules.cache.has("1144269909405225021") &&
-    newRules.cache.has("1144269909405225021")
-  ) {
-    if (oldRules.cache.has("980761785147748373")) {
-      oldRules.remove("980761785147748373");
-      client.channels.cache.get("1143484641718837318").send({
+  if (!oldRules.cache.has(rules_NoAdult) && newRules.cache.has(rules_NoAdult)) {
+    if (oldRules.cache.has(rules_Default)) {
+      oldRules.remove(rules_Default);
+      client.channels.cache.get(channels_NoAdult).send({
         content: `<@${newMember.user.id}> 님이 미자 판정을 받았습니다.`,
       });
     }
   }
 
   // 바보
-  if (
-    !oldRules.cache.has("1140989896220233920") &&
-    newRules.cache.has("1140989896220233920")
-  ) {
-    if (oldRules.cache.has("980761785147748373")) {
-      oldRules.remove("980761785147748373");
+  if (!oldRules.cache.has(rules_Babo) && newRules.cache.has(rules_Babo)) {
+    if (oldRules.cache.has(rules_Default)) {
+      oldRules.remove(rules_Default);
     }
 
-    if (oldRules.cache.has("1144269909405225021")) {
-      oldRules.remove("1144269909405225021");
+    if (oldRules.cache.has(rules_NoAdult)) {
+      oldRules.remove(rules_NoAdult);
     }
   }
 
   // 경고 해제
-  if (
-    oldRules.cache.has("1104721596515627058") &&
-    !newRules.cache.has("1104721596515627058")
-  ) {
-    client.channels.cache.get("1153229593763905566").send({
+  if (oldRules.cache.has(rules_Danger) && !newRules.cache.has(rules_Danger)) {
+    client.channels.cache.get(channels_Danger).send({
       content: `<@${oldMember.user.id}> 님의 경고가 해제되었습니다.`,
     });
   }
 
   // 바보 or 미짜 있는데 시청자를 받은 경우 해제
-  if (
-    !oldRules.cache.has("980761785147748373") &&
-    newRules.cache.has("980761785147748373")
-  ) {
-    if (
-      oldRules.cache.has("1144269909405225021") ||
-      oldRules.cache.has("1140989896220233920")
-    ) {
-      oldRules.remove("980761785147748373");
+  if (!oldRules.cache.has(rules_Default) && newRules.cache.has(rules_Default)) {
+    if (oldRules.cache.has(rules_NoAdult) || oldRules.cache.has(rules_Babo)) {
+      oldRules.remove(rules_Default);
+    }
+  }
+
+  // 바보가 있는데 미짜를 받은 경우 해제
+  if (!oldRules.cache.has(rules_NoAdult) && newRules.cache.has(rules_NoAdult)) {
+    if (oldRules.cache.has(rules_Babo)) {
+      oldRules.remove(rules_NoAdult);
     }
   }
 });
