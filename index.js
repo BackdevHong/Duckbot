@@ -61,9 +61,10 @@ client.on(Events.GuildMemberUpdate, (oldMember, newMember) => {
   ) {
     if (oldRules.cache.has("980761785147748373")) {
       oldRules.remove("980761785147748373");
-      if (oldRules.cache.has("1144269909405225021")) {
-        oldRules.remove("1144269909405225021");
-      }
+    }
+
+    if (oldRules.cache.has("1144269909405225021")) {
+      oldRules.remove("1144269909405225021");
     }
   }
 
