@@ -20,7 +20,10 @@ const client = new Client({
 const rules_Babo = process.env.RULES_BABO;
 const rules_NoAdult = process.env.RULES_NOADULT;
 const rules_Default = process.env.RULES_DEFAULT;
+const rules_BlueAdmin = process.env.RULES_BLUEADMIN;
+const rules_OrangeAdmin = process.env.RULES_ORANGEADMIN;
 const rules_Danger = process.env.RULES_DANGER;
+const rules_Fight = process.env.RULES_FIGHT;
 
 // 채널
 const channels_Babo = process.env.CHANNEL_BABO;
@@ -91,6 +94,39 @@ client.on(Events.GuildMemberUpdate, (oldMember, newMember) => {
   if (!oldRules.cache.has(rules_NoAdult) && newRules.cache.has(rules_NoAdult)) {
     if (oldRules.cache.has(rules_Babo)) {
       oldRules.remove(rules_NoAdult);
+    }
+  }
+
+  // 투견 감지
+  if (!oldRules.cache.has(rules_Fight) && newRules.cache.has(rules_Fight)) {
+    oldRules.remove(rules_Babo);
+    oldRules.remove(rules_Default);
+    oldRules.remove(rules_NoAdult);
+    oldRules.remove(rules_BlueAdmin);
+    oldRules.remove(rules_OrangeAdmin);
+  }
+
+  // 투견 제거
+  if (oldRules.cache.has(rules_Fight) && !newRules.cache.has(rules_Fight)) {
+    oldRules.add(rules_Default);
+  }
+
+  // 투견 중 감지
+  if (
+    (!oldRules.cache.has(rules_Default) && newRules.cache.has(rules_Default)) ||
+    (!oldRules.cache.has(rules_Babo) && newRules.cache.has(rules_Babo)) ||
+    (!oldRules.cache.has(rules_NoAdult) && newRules.cache.has(rules_NoAdult)) ||
+    (!oldRules.cache.has(rules_BlueAdmin) &&
+      newRules.cache.has(rules_BlueAdmin)) ||
+    (!oldRules.cache.has(rules_OrangeAdmin) &&
+      newRules.cache.has(rules_OrangeAdmin))
+  ) {
+    if (oldRules.cache.has(rules_Fight)) {
+      oldRules.remove(rules_Babo);
+      oldRules.remove(rules_Default);
+      oldRules.remove(rules_NoAdult);
+      oldRules.remove(rules_BlueAdmin);
+      oldRules.remove(rules_OrangeAdmin);
     }
   }
 });
