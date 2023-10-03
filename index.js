@@ -3,8 +3,28 @@ const {
   GatewayIntentBits,
   Events,
   EmbedBuilder,
+  Partials,
 } = require("discord.js");
 const dotenv = require("dotenv");
+const express = require("express");
+const http = require("http");
+
+const app = express();
+const server = http.createServer(app);
+
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "*",
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log(`연결 완료 : ${socket.request.url}`);
+});
+
+server.listen(3001, () => {
+  console.log("server start");
+});
 
 dotenv.config();
 
@@ -16,6 +36,7 @@ const client = new Client({
     GatewayIntentBits.MessageContent,
     GatewayIntentBits.GuildMessages,
   ],
+  partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 });
 
 // 역할
@@ -37,9 +58,9 @@ client.on(Events.ThreadUpdate, async (oldThread, newThread) => {
     return;
   }
 
-  const guild = client.guilds.cache.get(process.env.GUILD_ID);
-
   if (!oldThread.locked && newThread.locked) {
+    const guild = client.guilds.cache.get(process.env.GUILD_ID);
+
     let res = guild.members.cache.filter(
       (member) => member.id === newThread.ownerId
     );
@@ -55,7 +76,18 @@ client.on(Events.ThreadUpdate, async (oldThread, newThread) => {
 
 client.on(Events.MessageCreate, async (message) => {
   if (message.author.bot) return;
+  const guild = client.guilds.cache.get(process.env.GUILD_ID);
+
+  if (message.guildId === guild.id) {
+    if (message.channelId === "1102195345527676968") {
+      io.emit("data", {
+        username: message.member.nickname,
+        content: message.content,
+      });
+    }
+  }
 });
+
 client.on(Events.GuildMemberUpdate, (oldMember, newMember) => {
   const oldRules = oldMember.roles;
   const newRules = newMember.roles;
