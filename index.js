@@ -13,6 +13,7 @@ const client = new Client({
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildPresences,
+    GatewayIntentBits.MessageContent,
   ],
 });
 
@@ -51,6 +52,9 @@ client.on(Events.ThreadUpdate, async (oldThread, newThread) => {
   }
 });
 
+client.on(Events.MessageCreate, async (message) => {
+  if (message.author.bot) return;
+});
 client.on(Events.GuildMemberUpdate, (oldMember, newMember) => {
   const oldRules = oldMember.roles;
   const newRules = newMember.roles;
