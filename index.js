@@ -100,6 +100,17 @@ client.on(Events.MessageCreate, async (message) => {
 
   if (message.guildId === guild.id) {
     if (message.content.startsWith("암살아")) {
+      if (
+        message.content.includes("스벨트") ||
+        message.content.includes("리액트")
+      ) {
+        message.reply({ content: "리액트가 짱이지 ㅇㅇ" });
+      }
+
+      if (message.content.includes("박을게")) {
+        message.reply({ content: "헤으응.. 박아주세요.. 주인님.." });
+      }
+
       const strArray = [
         "뭐",
         "왜",
@@ -115,6 +126,9 @@ client.on(Events.MessageCreate, async (message) => {
         "박을게",
         "넣을게",
         "사릴게..",
+        "하..",
+        "뭣",
+        "섹스!!",
       ];
       const randomValue = strArray[Math.floor(Math.random() * strArray.length)];
       message.reply({ content: randomValue });
