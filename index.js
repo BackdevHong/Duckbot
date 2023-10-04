@@ -118,7 +118,11 @@ client.on(Events.MessageCreate, async (message) => {
         return;
       }
 
-      if (message.content.includes("죽어")) {
+      if (
+        message.content.includes("죽어") ||
+        message.content.includes("뒤져") ||
+        message.content.includes("나가")
+      ) {
         message.reply({ content: "너나 죽어.." });
         return;
       }
