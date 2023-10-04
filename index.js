@@ -141,7 +141,10 @@ client.on(Events.MessageCreate, async (message) => {
 
       if (message.content.includes("vs")) {
         const arr = message.content.split("vs");
-        console.log(arr);
+        arr[0] = arr[0].split("암살아");
+
+        const randomValue = arr[Math.floor(Math.random() * arr.length)];
+        message.reply({ content: `"${randomValue}" 이쪽!` });
       }
 
       if (
