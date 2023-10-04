@@ -30,11 +30,10 @@ dotenv.config();
 
 const client = new Client({
   intents: [
-    GatewayIntentBits.GuildMembers,
     GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildPresences,
-    GatewayIntentBits.MessageContent,
     GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildMembers,
   ],
   partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 });
@@ -75,7 +74,7 @@ client.on(Events.GuildMemberRemove, (member) => {
 });
 
 client.on(Events.ThreadUpdate, async (oldThread, newThread) => {
-  if (oldThread.locked == newThread.locked) {
+  if (oldThread.locked === newThread.locked) {
     return;
   }
 
@@ -100,6 +99,26 @@ client.on(Events.MessageCreate, async (message) => {
   const guild = client.guilds.cache.get(process.env.GUILD_ID);
 
   if (message.guildId === guild.id) {
+    if (message.content.startsWith("암살아")) {
+      const strArray = [
+        "뭐",
+        "왜",
+        "나가 뒤져",
+        "잘 안들려..",
+        "시발련이 뭔 소릴 하는거야",
+        "사형!!!",
+        "야메떼..",
+        "마따끄..",
+        "ㅗ",
+        "ㅗㅗ",
+        "헤으응",
+        "박을게",
+        "넣을게",
+        "사릴게..",
+      ];
+      const randomValue = strArray[Math.floor(Math.random() * strArray.length)];
+      message.reply({ content: randomValue });
+    }
     if (message.channelId === "1102195345527676968") {
       io.emit("data", {
         username: message.member.nickname,
