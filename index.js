@@ -105,10 +105,12 @@ client.on(Events.MessageCreate, async (message) => {
         message.content.includes("리액트")
       ) {
         message.reply({ content: "리액트가 짱이지 ㅇㅇ" });
+        return;
       }
 
       if (message.content.includes("박을게")) {
         message.reply({ content: "헤으응.. 박아주세요.. 주인님.." });
+        return;
       }
 
       const strArray = [
