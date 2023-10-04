@@ -100,7 +100,12 @@ client.on(Events.MessageCreate, async (message) => {
 
   if (message.guildId === guild.id) {
     if (message.content.startsWith("암살아")) {
-      if (message.content.includes("추천곡")) {
+      if (
+        message.content.includes("추천곡") ||
+        message.content.includes("곡") ||
+        message.content.includes("노래") ||
+        message.content.includes("송")
+      ) {
         const strArray = [
           "https://www.youtube.com/watch?v=9bDS2sj0ApI",
           "https://www.youtube.com/watch?v=9p8LXToowRU",
