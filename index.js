@@ -52,6 +52,27 @@ const rules_Fight = process.env.RULES_FIGHT;
 const channels_Babo = process.env.CHANNEL_BABO;
 const channels_NoAdult = process.env.CHANNEL_NOADULT;
 const channels_Danger = process.env.CHANNEL_DANGER;
+const channels_Alert = process.env.CHANNEL_ALERT;
+
+client.on(Events.GuildMemberRemove, (member) => {
+  const roles = member.roles.cache
+    .filter((roles) => roles.id !== member.guild.id)
+    .map((role) => role.name.toString())
+    .join(" | ");
+
+  const embed = new EmbedBuilder()
+    .setTitle("퇴장 안내")
+    .setDescription(`<@${member.id}>님이 퇴장하셨습니다.`)
+    .addFields({
+      name: "역할",
+      value: `<@${member.id}>님이 가지고 계셨던 역할은\n ${roles} 입니다`,
+      inline: false,
+    });
+
+  client.channels.cache.get(channels_Alert).send({
+    embeds: [embed],
+  });
+});
 
 client.on(Events.ThreadUpdate, async (oldThread, newThread) => {
   if (oldThread.locked == newThread.locked) {
