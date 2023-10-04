@@ -145,6 +145,7 @@ client.on(Events.MessageCreate, async (message) => {
 
         const randomValue = arr[Math.floor(Math.random() * arr.length)];
         message.reply({ content: `"${randomValue}" 이쪽!` });
+        return;
       }
 
       if (
