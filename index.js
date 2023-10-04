@@ -113,6 +113,16 @@ client.on(Events.MessageCreate, async (message) => {
         return;
       }
 
+      if (message.content.includes("좋아")) {
+        message.reply({ content: "ㄸ..딱히 좋아하는 건.. 아..아니거든!" });
+        return;
+      }
+
+      if (message.content.includes("죽어")) {
+        message.reply({ content: "너나 죽어.." });
+        return;
+      }
+
       const strArray = [
         "뭐",
         "왜",
@@ -132,7 +142,6 @@ client.on(Events.MessageCreate, async (message) => {
         "뭣",
         "섹스!!",
         "ㅎ..흥!",
-        "따..딱히! 널 조..좋아하는건 아니거..든?",
         "갈!!!!!!!",
       ];
       const randomValue = strArray[Math.floor(Math.random() * strArray.length)];
