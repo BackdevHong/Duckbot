@@ -100,44 +100,44 @@ client.on(Events.MessageCreate, async (message) => {
 
   if (message.guildId === guild.id) {
     if (message.content.startsWith("암살아")) {
-      if (
-        message.content.includes("추천곡") ||
-        message.content.includes("곡") ||
-        message.content.includes("노래") ||
-        message.content.includes("송")
-      ) {
-        const strArray = [
-          "https://www.youtube.com/watch?v=9bDS2sj0ApI",
-          "https://www.youtube.com/watch?v=9p8LXToowRU",
-          "https://www.youtube.com/watch?v=oGwLZF52hyI",
-          "https://www.youtube.com/watch?v=6i5IgrbACII",
-          "https://www.youtube.com/watch?v=mEZqJ65ra08",
-          "https://www.youtube.com/watch?v=CF5wKWDqxHg",
-          "https://www.youtube.com/watch?v=eNlXPUp9WBw",
-          "https://www.youtube.com/watch?v=yExlhns57ps",
-          "https://www.youtube.com/watch?v=NQAxALuAFPQ",
-          "https://www.youtube.com/watch?v=DPEtmqvaKqY",
-          "https://www.youtube.com/watch?v=slHVtG9nM5I",
-          "https://www.youtube.com/watch?v=QgMFpuos4Rg",
-          "https://www.youtube.com/watch?v=rDFUl2mHIW4",
-          "https://www.youtube.com/watch?v=f09oTPk4hTY",
-          "https://www.youtube.com/watch?v=34o31uJnXao",
-          "https://www.youtube.com/watch?v=aHHtEoHn4Rw",
-          "https://www.youtube.com/watch?v=wVmSSxDkELQ",
-          "https://www.youtube.com/watch?v=Ci_zad39Uhw",
-          "https://www.youtube.com/watch?v=1GMar6F_ovY",
-          "https://www.youtube.com/watch?v=PnLzYigLYu8",
-          "https://www.youtube.com/watch?v=Ehbt9BtALDI",
-          "https://www.youtube.com/watch?v=DmM-L829q80",
-          "https://www.youtube.com/watch?v=vd-GR6u_HZg",
-          "https://www.youtube.com/watch?v=H6u49B8oANI",
-          "https://www.youtube.com/watch?v=pkypi5nXSYM",
-        ];
-        const randomValue =
-          strArray[Math.floor(Math.random() * strArray.length)];
-        message.reply({ content: `${randomValue} 이거나 들어` });
-        return;
-      }
+      // if (
+      //   message.content.includes("추천곡") ||
+      //   message.content.includes("곡") ||
+      //   message.content.includes("노래") ||
+      //   message.content.includes("송")
+      // ) {
+      //   const strArray = [
+      //     "https://www.youtube.com/watch?v=9bDS2sj0ApI",
+      //     "https://www.youtube.com/watch?v=9p8LXToowRU",
+      //     "https://www.youtube.com/watch?v=oGwLZF52hyI",
+      //     "https://www.youtube.com/watch?v=6i5IgrbACII",
+      //     "https://www.youtube.com/watch?v=mEZqJ65ra08",
+      //     "https://www.youtube.com/watch?v=CF5wKWDqxHg",
+      //     "https://www.youtube.com/watch?v=eNlXPUp9WBw",
+      //     "https://www.youtube.com/watch?v=yExlhns57ps",
+      //     "https://www.youtube.com/watch?v=NQAxALuAFPQ",
+      //     "https://www.youtube.com/watch?v=DPEtmqvaKqY",
+      //     "https://www.youtube.com/watch?v=slHVtG9nM5I",
+      //     "https://www.youtube.com/watch?v=QgMFpuos4Rg",
+      //     "https://www.youtube.com/watch?v=rDFUl2mHIW4",
+      //     "https://www.youtube.com/watch?v=f09oTPk4hTY",
+      //     "https://www.youtube.com/watch?v=34o31uJnXao",
+      //     "https://www.youtube.com/watch?v=aHHtEoHn4Rw",
+      //     "https://www.youtube.com/watch?v=wVmSSxDkELQ",
+      //     "https://www.youtube.com/watch?v=Ci_zad39Uhw",
+      //     "https://www.youtube.com/watch?v=1GMar6F_ovY",
+      //     "https://www.youtube.com/watch?v=PnLzYigLYu8",
+      //     "https://www.youtube.com/watch?v=Ehbt9BtALDI",
+      //     "https://www.youtube.com/watch?v=DmM-L829q80",
+      //     "https://www.youtube.com/watch?v=vd-GR6u_HZg",
+      //     "https://www.youtube.com/watch?v=H6u49B8oANI",
+      //     "https://www.youtube.com/watch?v=pkypi5nXSYM",
+      //   ];
+      //   const randomValue =
+      //     strArray[Math.floor(Math.random() * strArray.length)];
+      //   message.reply({ content: `${randomValue} 이거나 들어` });
+      //   return;
+      // }
 
       if (
         message.content.includes("스벨트") ||
