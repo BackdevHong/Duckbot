@@ -53,6 +53,8 @@ const channels_NoAdult = process.env.CHANNEL_NOADULT;
 const channels_Danger = process.env.CHANNEL_DANGER;
 const channels_Alert = process.env.CHANNEL_ALERT;
 
+console.log(channels_Alert);
+
 client.on(Events.GuildMemberRemove, (member) => {
   const roles = member.roles.cache
     .filter((roles) => roles.id !== member.guild.id)
