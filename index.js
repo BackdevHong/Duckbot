@@ -131,6 +131,9 @@ client.on(Events.MessageCreate, async (message) => {
         "하..",
         "뭣",
         "섹스!!",
+        "ㅎ..흥!",
+        "따..딱히! 널 조..좋아하는건 아니거..든?",
+        "갈!!!!!!!",
       ];
       const randomValue = strArray[Math.floor(Math.random() * strArray.length)];
       message.reply({ content: randomValue });
