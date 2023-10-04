@@ -139,6 +139,11 @@ client.on(Events.MessageCreate, async (message) => {
       //   return;
       // }
 
+      if (message.content.includes("vs")) {
+        const arr = message.content.split("vs");
+        console.log(arr);
+      }
+
       if (
         message.content.includes("스벨트") ||
         message.content.includes("리액트")
