@@ -61,14 +61,26 @@ client.on(Events.GuildMemberRemove, (member) => {
     .map((role) => role.name.toString())
     .join(" | ");
 
-  const embed = new EmbedBuilder()
-    .setTitle("퇴장 안내")
-    .setDescription(`<@${member.id}>님이 퇴장하셨습니다.`)
-    .addFields({
-      name: "역할",
-      value: `<@${member.id}>님이 가지고 계셨던 역할은\n ${roles} 입니다`,
-      inline: false,
-    });
+  let embed;
+  if (roles.length > 0) {
+    embed = new EmbedBuilder()
+      .setTitle("퇴장 안내")
+      .setDescription(`<@${member.id}>님이 퇴장하셨습니다.`)
+      .addFields({
+        name: "역할",
+        value: `<@${member.id}>님이 가지고 계셨던 역할은\n ${roles} 입니다`,
+        inline: false,
+      });
+  } else {
+    embed = new EmbedBuilder()
+      .setTitle("퇴장 안내")
+      .setDescription(`<@${member.id}>님이 퇴장하셨습니다.`)
+      .addFields({
+        name: "역할",
+        value: `<@${member.id}>님이 가지고 계셨던 역할이 없습니다.`,
+        inline: false,
+      });
+  }
 
   client.channels.cache.get(channels_Alert).send({
     embeds: [embed],
