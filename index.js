@@ -179,7 +179,9 @@ client.on(Events.MessageCreate, async (message) => {
     }
     if (message.channelId === "1102195345527676968") {
       io.emit("data", {
-        username: message.member.nickname,
+        username: message.member.nickname
+          ? message.member.nickname
+          : message.member.user.username,
         content: message.content,
       });
     }
