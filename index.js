@@ -112,29 +112,29 @@ client.on(Events.MessageCreate, async (message) => {
   if (message.author.bot) return;
   const guild = client.guilds.cache.get(process.env.GUILD_ID);
 
-  if (
-    message.content.includes("스벨트") ||
-    message.content.includes("리액트")
-  ) {
-    message.reply({ content: "리액트가 짱이지 ㅇㅇ" });
-    return;
-  }
-
-  if (
-    message.content.includes("애플") ||
-    message.content.includes("맥") ||
-    message.content.includes("윈도우") ||
-    message.content.includes("사과") ||
-    message.content.includes("마이크로소프트") ||
-    message.content.includes("apple") ||
-    message.content.includes("ms")
-  ) {
-    message.reply({ content: "지존 애플" });
-    return;
-  }
-
   if (message.guildId === guild.id) {
     if (message.content.startsWith("암살아")) {
+      if (
+        message.content.includes("스벨트") ||
+        message.content.includes("리액트")
+      ) {
+        message.reply({ content: "리액트가 짱이지 ㅇㅇ" });
+        return;
+      }
+
+      if (
+        message.content.includes("애플") ||
+        message.content.includes("맥") ||
+        message.content.includes("윈도우") ||
+        message.content.includes("사과") ||
+        message.content.includes("마이크로소프트") ||
+        message.content.includes("apple") ||
+        message.content.includes("ms")
+      ) {
+        message.reply({ content: "지존 애플" });
+        return;
+      }
+
       if (message.content.includes("vs")) {
         const arr = message.content.split("vs");
         arr[0] = arr[0].split("암살아")[1].trim();
