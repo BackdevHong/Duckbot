@@ -125,7 +125,9 @@ client.on(Events.MessageCreate, async (message) => {
     message.content.includes("맥") ||
     message.content.includes("윈도우") ||
     message.content.includes("사과") ||
-    message.content.includes("마이크로소프트")
+    message.content.includes("마이크로소프트") ||
+    message.content.includes("apple") ||
+    message.content.includes("ms")
   ) {
     message.reply({ content: "지존 애플" });
     return;
