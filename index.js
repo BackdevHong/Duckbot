@@ -228,12 +228,6 @@ client.on(Events.MessageCreate, async (message) => {
   }
 });
 
-client.on(Events.GuildRoleUpdate, (oldRoles, newRoles) => {
-  client.channels.cache.get(channels_Alert).send({
-    content: `${oldRoles.name} -> ${newRoles.name}`
-  })
-})
-
 client.on(Events.GuildMemberUpdate, (oldMember, newMember) => {
   const oldRules = oldMember.roles;
   const newRules = newMember.roles;
