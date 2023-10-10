@@ -54,8 +54,6 @@ const channels_NoAdult = process.env.CHANNEL_NOADULT;
 const channels_Danger = process.env.CHANNEL_DANGER;
 const channels_Alert = process.env.CHANNEL_ALERT;
 
-console.log(channels_Alert);
-
 client.on(Events.GuildMemberRemove, (member) => {
   const roles = member.roles.cache
     .filter((roles) => roles.id !== member.guild.id)
@@ -96,9 +94,7 @@ client.on('roleUpdate', async (oldRoles, newRoles) => {
     const {executor} = audit.entries.first()
     const user = await guild.members.cache.get(executor.id)
 
-    if (user.permissions.has("Administrator")) {
-      return
-    } else {
+    if (!user.permissions.has("Administrator")) {
       newRoles.edit(oldRoles)
     }
   })
@@ -112,9 +108,7 @@ client.on('roleCreate', async (roles) => {
     const {executor} = audit.entries.first()
     const user = await guild.members.cache.get(executor.id)
 
-    if (user.permissions.has("Administrator")) {
-      return
-    } else {
+    if (!user.permissions.has("Administrator")) {
       roles.delete("어드민이 아니어서")
     }
   })
