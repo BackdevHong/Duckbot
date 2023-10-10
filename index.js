@@ -4,6 +4,7 @@ const {
   Events,
   EmbedBuilder,
   Partials,
+  AuditLogEvent,
 } = require("discord.js");
 const dotenv = require("dotenv");
 const express = require("express");
@@ -86,6 +87,38 @@ client.on(Events.GuildMemberRemove, (member) => {
     embeds: [embed],
   });
 });
+
+client.on('roleUpdate', async (oldRoles, newRoles) => {
+  const guild = client.guilds.cache.get(process.env.GUILD_ID)
+  newRoles.guild.fetchAuditLogs({
+    type: AuditLogEvent.RoleUpdate
+  }).then(async audit => {
+    const {executor} = audit.entries.first()
+    const user = await guild.members.cache.get(executor.id)
+
+    if (user.permissions.has("Administrator")) {
+      return
+    } else {
+      newRoles.edit(oldRoles)
+    }
+  })
+})
+
+client.on('roleCreate', async (roles) => {
+  const guild = client.guilds.cache.get(process.env.GUILD_ID)
+  roles.guild.fetchAuditLogs({
+    type: AuditLogEvent.RoleCreate
+  }).then(async audit => {
+    const {executor} = audit.entries.first()
+    const user = await guild.members.cache.get(executor.id)
+
+    if (user.permissions.has("Administrator")) {
+      return
+    } else {
+      roles.delete("어드민이 아니어서")
+    }
+  })
+})
 
 client.on(Events.ThreadUpdate, async (oldThread, newThread) => {
   if (oldThread.locked === newThread.locked) {
@@ -200,6 +233,12 @@ client.on(Events.MessageCreate, async (message) => {
     }
   }
 });
+
+client.on(Events.GuildRoleUpdate, (oldRoles, newRoles) => {
+  client.channels.cache.get(channels_Alert).send({
+    content: `${oldRoles.name} -> ${newRoles.name}`
+  })
+})
 
 client.on(Events.GuildMemberUpdate, (oldMember, newMember) => {
   const oldRules = oldMember.roles;
