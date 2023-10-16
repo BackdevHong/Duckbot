@@ -63,99 +63,6 @@ const channels_Alert = process.env.CHANNEL_ALERT;
 
 registerCommands(process.env.TOKEN, process.env.CLIENT_ID, process.env.GUILD_ID)
 
-client.on(Events.InteractionCreate, async (interaction) => {
-  if (!interaction.isCommand()) return;
-
-  if (interaction.commandName === "미자") {
-    const member = interaction.options.getMember('검사대상')
-    await interaction.deferReply({ephemeral: true})
-    if (!member) {
-      await interaction.editReply({content: "대상 플레이어를 적어주세요!", ephemeral: true})
-      return;
-    } else {
-      const bookCount = books.books.length
-      const randomBook = books.books[Math.floor(Math.random() * bookCount)]
-      const userAlready = await clientDB.checkAdultList.findFirst({
-        where: {
-          userId: member.id
-        }
-      })
-
-      if (userAlready) {
-        if (userAlready.isPass === undefined || userAlready.isPass === null) {
-          await interaction.editReply({content: `<@${member.id}>님은 이미 미자 검사를 받고있는 중입니다.`, ephemeral: true});
-          return;
-        } else {
-          const isPassed = userAlready.isPass ? "인증됨" : "인증안됨"
-          await interaction.editReply({content: `<@${member.id}>님은 이미 미자 검사를 받으셨습니다. 결과 : ${isPassed}`, ephemeral: true});
-        }
-      } else {
-        let id;
-        clientDB.checkAdultList.create({
-          data: {
-            userId: member.id,
-            bookISBN: String(randomBook.isbn)
-          }
-        }).then((e) => {
-          id = e.id
-        })
-        const embed = new EmbedBuilder()
-          .setTitle("미성년자 인증 안내")
-          .setDescription("오 이런! 당신은 미성년자 인증을 받아야 합니다!")
-          .addFields(
-            {name: "인증은 어떻게 받나요?", value: `교보문고 사이트로 들어가 회원가입 및 로그인을 한 후, 아래 링크로 들어가 isbn 코드를 찾아 암살봇 DM으로 보내주시면 됩니다. ${randomBook.url}`, inline: true},
-            {name: "인증 제한 시간은요?", value: "인증 제한시간은 하루입니다. 하루가 지나면 자동으로 인증 실패 처리됩니다.", inline: true}
-          )
-
-        const msg = await member.user.send({embeds: [embed]});
-        await interaction.editReply({content: "성공적으로 메시지를 보냈습니다.", ephemeral: true});
-        const guild = client.guilds.cache.get(process.env.GUILD_ID);
-
-        msg.channel.awaitMessages({max: 1, time: 1000 * 60 * 60 * 24, errors: ['time']}).then(async (c) => {
-          const result = c.first().content
-          if (result === String(randomBook.isbn)) {
-            await clientDB.checkAdultList.update({
-              where: {
-                id
-              },
-              data: {
-                isPass: true
-              },
-            })
-            const user = guild.members.cache.get(member.id).roles.add('1149002129147703316')
-            await member.user.send("인증되었습니다. 감사합니다.")
-            return
-          } else {
-            await clientDB.checkAdultList.update({
-              where: {
-                id
-              },
-              data: {
-                isPass: false
-              },
-            })
-            const user = guild.members.cache.get(member.id).roles.add(rules_NoAdult)
-            await member.user.send("isbn 코드가 달라 인증에 실패하였습니다.").
-            return
-          }
-        }).catch(async (e) => {
-          await clientDB.checkAdultList.update({
-            where: {
-              id
-            },
-            data: {
-              isPass: false
-            },
-          })
-          const user = guild.members.cache.get(member.id).roles.add(rules_NoAdult)
-          await member.user.send("시간 초과로 인해 인증이 실패하였습니다.").
-          return
-        })
-        return;
-      }
-    }
-  }
-})
 
 client.on(Events.GuildMemberRemove, (member) => {
   const roles = member.roles.cache
@@ -441,5 +348,102 @@ client.on(Events.ClientReady, async (client) => {
     });
   }, 1000);
 });
+
+client.on(Events.InteractionCreate, async (interaction) => {
+  if (!interaction.isCommand()) return;
+
+  await interaction.deferReply({ephemeral: true})
+
+  if (interaction.commandName === "미자") {
+    const member = interaction.options.getMember('검사대상')
+    if (!member) {
+      await interaction.editReply({content: "대상 플레이어를 적어주세요!", ephemeral: true})
+      return;
+    } else {
+      const bookCount = books.books.length
+      const randomBook = books.books[Math.floor(Math.random() * bookCount)]
+      const userAlready = await clientDB.checkAdultList.findFirst({
+        where: {
+          userId: member.id
+        }
+      })
+
+      if (userAlready) {
+        if (userAlready.isPass === undefined || userAlready.isPass === null) {
+          await interaction.editReply({content: `<@${member.id}>님은 이미 미자 검사를 받고있는 중입니다.`, ephemeral: true});
+          return;
+        } else {
+          const isPassed = userAlready.isPass ? "인증됨" : "인증안됨"
+          await interaction.editReply({content: `<@${member.id}>님은 이미 미자 검사를 받으셨습니다. 결과 : ${isPassed}`, ephemeral: true});
+          return;
+        }
+      } else {
+        let id;
+        clientDB.checkAdultList.create({
+          data: {
+            userId: member.id,
+            bookISBN: String(randomBook.isbn)
+          }
+        }).then((e) => {
+          id = e.id
+        })
+        
+        await interaction.editReply({content: "성공적으로 메시지를 보냈습니다.", ephemeral: true});
+        const embed = new EmbedBuilder()
+          .setTitle("미성년자 인증 안내")
+          .setDescription("오 이런! 당신은 미성년자 인증을 받아야 합니다!")
+          .addFields(
+            {name: "인증은 어떻게 받나요?", value: `교보문고 사이트로 들어가 회원가입 및 로그인을 한 후, 아래 링크로 들어가 isbn 코드를 찾아 암살봇 DM으로 보내주시면 됩니다. ${randomBook.url}`, inline: true},
+            {name: "인증 제한 시간은요?", value: "인증 제한시간은 하루입니다. 하루가 지나면 자동으로 인증 실패 처리됩니다.", inline: true}
+          )
+
+        const msg = await member.user.send({embeds: [embed]});
+        const guild = client.guilds.cache.get(process.env.GUILD_ID);
+
+        msg.channel.awaitMessages({max: 1, time: 1000 * 60 * 60 * 24, errors: ['time']}).then(async (c) => {
+          const result = c.first().content
+          if (result === String(randomBook.isbn)) {
+            await clientDB.checkAdultList.update({
+              where: {
+                id
+              },
+              data: {
+                isPass: true
+              },
+            })
+            const user = guild.members.cache.get(member.id).roles.add('1149002129147703316')
+            await member.user.send("인증되었습니다. 감사합니다.")
+            return
+          } else {
+            await clientDB.checkAdultList.update({
+              where: {
+                id
+              },
+              data: {
+                isPass: false
+              },
+            })
+            const user = guild.members.cache.get(member.id).roles.add(rules_NoAdult)
+            await member.user.send("isbn 코드가 달라 인증에 실패하였습니다.").
+            return
+          }
+        }).catch(async (e) => {
+          await clientDB.checkAdultList.update({
+            where: {
+              id
+            },
+            data: {
+              isPass: false
+            },
+          })
+          const user = guild.members.cache.get(member.id).roles.add(rules_NoAdult)
+          await member.user.send("시간 초과로 인해 인증이 실패하였습니다.").
+          return
+        })
+        return;
+      }
+    }
+  }
+})
 
 client.login(process.env.TOKEN);
