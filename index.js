@@ -68,9 +68,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
   if (interaction.commandName === "미자") {
     const member = interaction.options.getMember('검사대상')
-
+    interaction.deferReply({ephemeral: true})
     if (!member) {
-      interaction.reply({content: "대상 플레이어를 적어주세요!", ephemeral: true})
+      interaction.editReply({content: "대상 플레이어를 적어주세요!", ephemeral: true})
       return;
     } else {
       const bookCount = books.books.length
@@ -83,11 +83,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
       if (userAlready) {
         if (userAlready.isPass === undefined || userAlready.isPass === null) {
-          interaction.reply({content: `<@${member.id}>님은 이미 미자 검사를 받고있는 중입니다.`, ephemeral: true});
+          interaction.editReply({content: `<@${member.id}>님은 이미 미자 검사를 받고있는 중입니다.`, ephemeral: true});
           return;
         } else {
           const isPassed = userAlready.isPass ? "인증됨" : "인증안됨"
-          interaction.reply({content: `<@${member.id}>님은 이미 미자 검사를 받으셨습니다. 결과 : ${isPassed}`, ephemeral: true});
+          interaction.editReply({content: `<@${member.id}>님은 이미 미자 검사를 받으셨습니다. 결과 : ${isPassed}`, ephemeral: true});
         }
       } else {
         let id;
@@ -108,7 +108,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
           )
 
         const msg = await member.user.send({embeds: [embed]});
-        interaction.reply({content: "성공적으로 메시지를 보냈습니다.", ephemeral: true});
+        interaction.editReply({content: "성공적으로 메시지를 보냈습니다.", ephemeral: true});
         const guild = client.guilds.cache.get(process.env.GUILD_ID);
 
         msg.channel.awaitMessages({max: 1, time: 1000 * 60 * 60 * 24, errors: ['time']}).then(async (c) => {
