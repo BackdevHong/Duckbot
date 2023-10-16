@@ -83,11 +83,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
       if (userAlready) {
         if (userAlready.isPass === undefined || userAlready.isPass === null) {
-          await interaction.reply({content: `<@${member.id}>님은 이미 미자 검사를 받고있는 중입니다.`, ephemeral: true});
+          await interaction.deferReply({content: `<@${member.id}>님은 이미 미자 검사를 받고있는 중입니다.`, ephemeral: true});
           return;
         } else {
           const isPassed = userAlready.isPass ? "인증됨" : "인증안됨"
-          await interaction.reply({content: `<@${member.id}>님은 이미 미자 검사를 받으셨습니다. 결과 : ${isPassed}`, ephemeral: true});
+          await interaction.deferReply({content: `<@${member.id}>님은 이미 미자 검사를 받으셨습니다. 결과 : ${isPassed}`, ephemeral: true});
         }
       } else {
         let id;
@@ -108,7 +108,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
           )
 
         const msg = await member.user.send({embeds: [embed]});
-        interaction.reply({content: "성공적으로 메시지를 보냈습니다.", ephemeral: true});
+        interaction.deferReply({content: "성공적으로 메시지를 보냈습니다.", ephemeral: true});
         const guild = client.guilds.cache.get(process.env.GUILD_ID);
 
         msg.channel.awaitMessages({max: 1, time: 1000 * 60 * 60 * 24, errors: ['time']}).then(async (c) => {
