@@ -420,7 +420,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
           .addFields(
             {name: "인증은 어떻게 받나요?", value: `교보문고 사이트로 들어가 회원가입 및 로그인을 한 후, 아래 링크로 들어가 isbn 코드를 찾아 암살봇 DM으로 보내주시면 됩니다. ${randomBook.url}`, inline: true},
             {name: "인증 제한 시간은요?", value: "인증 제한시간은 하루입니다. 하루가 지나면 자동으로 인증 실패 처리됩니다.", inline: true},
-            {name: "isbn 코드는 어디서 얻나요?", value: "isbn 코드는 아래 이미지처럼, 링크 -> '기본정보'란에 적혀있습니다.", inline: true},
+            {name: "isbn 코드는 어디서 얻나요?", value: "isbn 코드는 아래 이미지처럼, 링크를 타고 스크롤을 조금 내리면 보이는 '기본정보'란에 적혀있습니다.", inline: true},
+            {name: "엥.. 안보이는데요?", value: "해당 링크는 성인인증을 한 계정이 아니면 책 정보를 볼 수 없게 되어있습니다."}
           )
           .setImage('attachment://desc.png')
           .setFooter({
