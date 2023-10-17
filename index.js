@@ -424,7 +424,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
           )
           .setImage('attachment://desc.png')
           .setFooter({
-            text: '**isbn 코드 이외의 다른 채팅을 치시면, 미자 처리되니 주의해주세요.**'
+            text: '※ isbn 코드 이외의 다른 채팅을 치시면, 미자 처리되니 주의해주세요.'
           })
           
 
