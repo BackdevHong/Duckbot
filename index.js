@@ -319,10 +319,6 @@ client.on(Events.GuildMemberUpdate, (oldMember, newMember) => {
   }
 });
 
-client.on(Events.InteractionCreate, async (interaction) => {
-
-})
-
 client.on(Events.ClientReady, async (client) => {
   console.log("Client ready");
 
