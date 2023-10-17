@@ -66,6 +66,27 @@ registerCommands(process.env.TOKEN, process.env.CLIENT_ID, process.env.GUILD_ID)
 
 
 client.on(Events.GuildMemberRemove, (member) => {
+  const noAdultCheck = clientDB.checkAdultList.findFirst({
+    where: {
+      userId: member.id
+    }
+  }).then((event) => {
+    if (!event) {
+      return;
+    } else {
+      if (event.isPass === "true" || event.isPass === "false") {
+        return;
+      } else {
+        member.ban().then(() => {
+          client.channels.cache.get(channels_log).send({
+            content: `<@${member.id}>님의 미자검사 결과, 미자입니다. ( 사유 : 미자 검사 회피 (나감) )`,
+          });
+        })
+      }
+    }
+  }).catch((e) => {
+    console.log(e)
+  })
   const roles = member.roles.cache
     .filter((roles) => roles.id !== member.guild.id)
     .map((role) => role.name.toString())
