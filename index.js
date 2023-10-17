@@ -59,6 +59,7 @@ const channels_Babo = process.env.CHANNEL_BABO;
 const channels_NoAdult = process.env.CHANNEL_NOADULT;
 const channels_Danger = process.env.CHANNEL_DANGER;
 const channels_Alert = process.env.CHANNEL_ALERT;
+const channels_log = process.env.CHANNEL_LOG;
 
 
 registerCommands(process.env.TOKEN, process.env.CLIENT_ID, process.env.GUILD_ID)
@@ -389,6 +390,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
         })
         
         await interaction.editReply({content: "성공적으로 메시지를 보냈습니다.", ephemeral: true});
+        await client.channels.cache.get(channels_log).send({
+          content: `<@${member.id}>님의 미자검사를 진행합니다. 요청자 : <@${interaction.member.id}>`,
+        });
         const embed = new EmbedBuilder()
           .setTitle("미성년자 인증 안내")
           .setDescription("오 이런! 당신은 미성년자 인증을 받아야 합니다!")
@@ -413,6 +417,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
             })
             const user = guild.members.cache.get(member.id).roles.add('1149002129147703316')
             await member.user.send("인증되었습니다. 감사합니다.")
+            await client.channels.cache.get(channels_log).send({
+              content: `<@${member.id}>님의 미자검사 결과, 성인입니다.`,
+            });
             return
           } else {
             await clientDB.checkAdultList.update({
@@ -424,7 +431,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
               },
             })
             const user = guild.members.cache.get(member.id).roles.add(rules_NoAdult)
-            await member.user.send("isbn 코드가 달라 인증에 실패하였습니다.").
+            await member.user.send("isbn 코드가 달라 인증에 실패하였습니다.")
+            await client.channels.cache.get(channels_log).send({
+              content: `<@${member.id}>님의 미자검사 결과, 미자입니다. ( 사유 : isbn 코드 불일치 )`,
+            });
             return
           }
         }).catch(async (e) => {
@@ -437,7 +447,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
             },
           })
           const user = guild.members.cache.get(member.id).roles.add(rules_NoAdult)
-          await member.user.send("시간 초과로 인해 인증이 실패하였습니다.").
+          await member.user.send("시간 초과로 인해 인증이 실패하였습니다.")
+          await client.channels.cache.get(channels_log).send({
+            content: `<@${member.id}>님의 미자검사 결과, 미자입니다. ( 사유 : 시간 초과 )`,
+          });
           return
         })
         return;
