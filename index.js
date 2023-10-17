@@ -5,7 +5,8 @@ const {
   EmbedBuilder,
   Partials,
   AuditLogEvent,
-  Message
+  Message,
+  AttachmentBuilder
 } = require("discord.js");
 const dotenv = require("dotenv");
 const express = require("express");
@@ -410,15 +411,24 @@ client.on(Events.InteractionCreate, async (interaction) => {
         await client.channels.cache.get(channels_log).send({
           content: `<@${member.id}>님의 미자검사를 진행합니다. 요청자 : <@${interaction.member.id}>`,
         });
+
+        const image = new AttachmentBuilder('./assets/desc.png', {name: 'desc.png'});
+
         const embed = new EmbedBuilder()
           .setTitle("미성년자 인증 안내")
           .setDescription("오 이런! 당신은 미성년자 인증을 받아야 합니다!")
           .addFields(
             {name: "인증은 어떻게 받나요?", value: `교보문고 사이트로 들어가 회원가입 및 로그인을 한 후, 아래 링크로 들어가 isbn 코드를 찾아 암살봇 DM으로 보내주시면 됩니다. ${randomBook.url}`, inline: true},
-            {name: "인증 제한 시간은요?", value: "인증 제한시간은 하루입니다. 하루가 지나면 자동으로 인증 실패 처리됩니다.", inline: true}
+            {name: "인증 제한 시간은요?", value: "인증 제한시간은 하루입니다. 하루가 지나면 자동으로 인증 실패 처리됩니다.", inline: true},
+            {name: "isbn 코드는 어디서 얻나요?", value: "isbn 코드는 아래 이미지처럼, 링크 -> '기본정보'란에 적혀있습니다.", inline: true},
           )
+          .setImage('attachment://desc.png')
+          .setFooter({
+            text: '**isbn 코드 이외의 다른 채팅을 치시면, 미자 처리되니 주의해주세요.**'
+          })
+          
 
-        const msg = await member.user.send({embeds: [embed]});
+        const msg = await member.user.send({embeds: [embed], files: [image]});
         const guild = client.guilds.cache.get(process.env.GUILD_ID);
 
         msg.channel.awaitMessages({max: 1, time: 1000 * 60 * 60 * 24, errors: ['time']}).then(async (c) => {
