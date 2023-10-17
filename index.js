@@ -6,7 +6,9 @@ const {
   Partials,
   AuditLogEvent,
   Message,
-  AttachmentBuilder
+  AttachmentBuilder,
+  ChannelType,
+  PermissionFlagsBits
 } = require("discord.js");
 const dotenv = require("dotenv");
 const express = require("express");
@@ -406,8 +408,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         }).then((e) => {
           id = e.id
         })
-        
-        await interaction.editReply({content: "성공적으로 메시지를 보냈습니다.", ephemeral: true});
+
         await client.channels.cache.get(channels_log).send({
           content: `<@${member.id}>님의 미자검사를 진행합니다. 요청자 : <@${interaction.member.id}>`,
         });
@@ -429,27 +430,45 @@ client.on(Events.InteractionCreate, async (interaction) => {
           })
           
 
-        const msg = await member.user.send({embeds: [embed], files: [image]});
         const guild = client.guilds.cache.get(process.env.GUILD_ID);
 
-        msg.channel.awaitMessages({max: 1, time: 1000 * 60 * 60 * 24, errors: ['time']}).then(async (c) => {
-          const result = c.first().content
-          if (result === String(randomBook.isbn)) {
-            await clientDB.checkAdultList.update({
-              where: {
-                id
-              },
-              data: {
-                isPass: true
-              },
-            })
-            const user = guild.members.cache.get(member.id).roles.add('1149002129147703316')
-            await member.user.send("인증되었습니다. 감사합니다.")
-            await client.channels.cache.get(channels_log).send({
-              content: `<@${member.id}>님의 미자검사 결과, 성인입니다.`,
-            });
-            return
-          } else {
+        const msg = member.user.send({embeds: [embed], files: [image]}).then(async (v) => {
+          await interaction.editReply({content: "성공적으로 메시지를 보냈습니다.", ephemeral: true});
+
+          v.channel.awaitMessages({max: 1, time: 1000 * 60 * 60 * 24, errors: ['time']}).then(async (c) => {
+            const result = c.first().content
+            if (result === String(randomBook.isbn)) {
+              await clientDB.checkAdultList.update({
+                where: {
+                  id
+                },
+                data: {
+                  isPass: true
+                },
+              })
+              const user = guild.members.cache.get(member.id).roles.add('1149002129147703316')
+              await member.user.send("인증되었습니다. 감사합니다.")
+              await client.channels.cache.get(channels_log).send({
+                content: `<@${member.id}>님의 미자검사 결과, 성인입니다.`,
+              });
+              return
+            } else {
+              await clientDB.checkAdultList.update({
+                where: {
+                  id
+                },
+                data: {
+                  isPass: false
+                },
+              })
+              const user = guild.members.cache.get(member.id).roles.add(rules_NoAdult)
+              await member.user.send("isbn 코드가 달라 인증에 실패하였습니다.")
+              await client.channels.cache.get(channels_log).send({
+                content: `<@${member.id}>님의 미자검사 결과, 미자입니다. ( 사유 : isbn 코드 불일치 )`,
+              });
+              return
+            }
+          }).catch(async (e) => {
             await clientDB.checkAdultList.update({
               where: {
                 id
@@ -459,28 +478,86 @@ client.on(Events.InteractionCreate, async (interaction) => {
               },
             })
             const user = guild.members.cache.get(member.id).roles.add(rules_NoAdult)
-            await member.user.send("isbn 코드가 달라 인증에 실패하였습니다.")
+            await member.user.send("시간 초과로 인해 인증이 실패하였습니다.")
             await client.channels.cache.get(channels_log).send({
-              content: `<@${member.id}>님의 미자검사 결과, 미자입니다. ( 사유 : isbn 코드 불일치 )`,
+              content: `<@${member.id}>님의 미자검사 결과, 미자입니다. ( 사유 : 시간 초과 )`,
             });
             return
-          }
-        }).catch(async (e) => {
-          await clientDB.checkAdultList.update({
-            where: {
-              id
-            },
-            data: {
-              isPass: false
-            },
           })
-          const user = guild.members.cache.get(member.id).roles.add(rules_NoAdult)
-          await member.user.send("시간 초과로 인해 인증이 실패하였습니다.")
-          await client.channels.cache.get(channels_log).send({
-            content: `<@${member.id}>님의 미자검사 결과, 미자입니다. ( 사유 : 시간 초과 )`,
-          });
-          return
-        })
+        }).catch(async (e) => {
+          await interaction.editReply({content: `<@${member.id}>님은 개인DM을 허용하고 있지 않습니다. 티켓인증을 실행합니다.`, ephemeral: true})
+          const ticket = guild.channels.cache.find((c) => c.name === "인증(수동)방" && c.type === "category")
+          if (!ticket) {
+            console.log("에러 발생, 카테고리 존재하지 않음")
+            return;
+          }
+
+          guild.channels.create({
+            name: `${member.displayName}님의 인증방`,
+            type: ChannelType.GuildText,
+            permissionOverwrites: [
+              {
+                id: member.id,
+                allow: [PermissionFlagsBits.ReadMessageHistory, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ViewChannel]
+              },
+              {
+                id: guild.roles.everyone,
+                deny: [PermissionFlagsBits.ViewChannel]
+              }
+            ]
+          }).then(channel => {
+            channel.setParent(ticket)
+            channel.awaitMessages({max: 1, time: 1000 * 60 * 60 * 24, errors: ['time']}).then(async (c) => {
+              const result = c.first().content
+              if (result === String(randomBook.isbn)) {
+                await clientDB.checkAdultList.update({
+                  where: {
+                    id
+                  },
+                  data: {
+                    isPass: true
+                  },
+                })
+                const user = guild.members.cache.get(member.id).roles.add('1149002129147703316')
+                await member.user.send("인증되었습니다. 감사합니다.")
+                await client.channels.cache.get(channels_log).send({
+                  content: `<@${member.id}>님의 미자검사 결과, 성인입니다.`,
+                });
+                return
+              } else {
+                await clientDB.checkAdultList.update({
+                  where: {
+                    id
+                  },
+                  data: {
+                    isPass: false
+                  },
+                })
+                const user = guild.members.cache.get(member.id).roles.add(rules_NoAdult)
+                await member.user.send("isbn 코드가 달라 인증에 실패하였습니다.")
+                await client.channels.cache.get(channels_log).send({
+                  content: `<@${member.id}>님의 미자검사 결과, 미자입니다. ( 사유 : isbn 코드 불일치 )`,
+                });
+                return
+              }
+            }).catch(async (e) => {
+              await clientDB.checkAdultList.update({
+                where: {
+                  id
+                },
+                data: {
+                  isPass: false
+                },
+              })
+              const user = guild.members.cache.get(member.id).roles.add(rules_NoAdult)
+              await member.user.send("시간 초과로 인해 인증이 실패하였습니다.")
+              await client.channels.cache.get(channels_log).send({
+                content: `<@${member.id}>님의 미자검사 결과, 미자입니다. ( 사유 : 시간 초과 )`,
+              });
+              return
+            })
+          })
+        });
         return;
       }
     }
