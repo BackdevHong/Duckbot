@@ -1,4 +1,4 @@
-const {SlashCommandBuilder, REST, Routes} = require("discord.js")
+const {SlashCommandBuilder, REST, Routes, PermissionFlagsBits} = require("discord.js")
 
 const commands = [
     new SlashCommandBuilder()
@@ -10,6 +10,7 @@ const commands = [
             .setDescription('미자를 검사할 대상을 선택하세요.')
             .setRequired(true)
         )
+        .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
 ].map(command => command.toJSON());
 
 module.exports = {
