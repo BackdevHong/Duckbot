@@ -409,15 +409,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
           id = e.id
         })
 
-        await client.channels.cache.get(channels_log).send({
-          content: `<@${member.id}>님의 미자검사를 진행합니다. 요청자 : <@${interaction.member.id}>`,
-        });
-
         const image = new AttachmentBuilder('./assets/desc.png', {name: 'desc.png'});
 
         const embed = new EmbedBuilder()
           .setTitle("미성년자 인증 안내")
-          .setDescription(`<@${member.id}> 오 이런! 당신은 미성년자 인증을 받아야 합니다!`)
+          .setDescription(`오 이런! 당신은 미성년자 인증을 받아야 합니다!`)
           .addFields(
             {name: "인증은 어떻게 받나요?", value: `교보문고 사이트로 들어가 회원가입 및 로그인을 한 후, 아래 링크로 들어가 isbn 코드를 찾아 암살봇 DM으로 보내주시면 됩니다. ${randomBook.url}`, inline: true},
             {name: "인증 제한 시간은요?", value: "인증 제한시간은 하루입니다. 하루가 지나면 자동으로 인증 실패 처리됩니다.", inline: true},
@@ -446,7 +442,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
                   isPass: true
                 },
               })
-              const user = guild.members.cache.get(member.id).roles.add('1149002129147703316')
+              await guild.members.cache.get(member.id).roles.add('1149002129147703316')
               await member.user.send("인증되었습니다. 감사합니다.")
               await client.channels.cache.get(channels_log).send({
                 content: `<@${member.id}>님의 미자검사 결과, 성인입니다.`,
@@ -461,7 +457,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
                   isPass: false
                 },
               })
-              const user = guild.members.cache.get(member.id).roles.add(rules_NoAdult)
+              await guild.members.cache.get(member.id).roles.add(rules_NoAdult)
               await member.user.send("isbn 코드가 달라 인증에 실패하였습니다.")
               await client.channels.cache.get(channels_log).send({
                 content: `<@${member.id}>님의 미자검사 결과, 미자입니다. ( 사유 : isbn 코드 불일치 )`,
@@ -508,7 +504,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
           }).then(async (channel) => {
             channel.setParent(ticket)
             const msg = await channel.send({embeds: [embed], files: [image]})
-            msg.channel.awaitMessages({max: 1, time: 1000 * 60 * 60 * 24, errors: ['time']}).then(async (c) => {
+            const mention = await channel.send({content: `<@${member.id}>`})
+            mention.channel.awaitMessages({max: 1, time: 1000 * 60 * 60 * 24, errors: ['time']}).then(async (c) => {
               const result = c.first().content
               if (result === String(randomBook.isbn)) {
                 await clientDB.checkAdultList.update({
@@ -519,7 +516,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
                     isPass: true
                   },
                 })
-                const user = guild.members.cache.get(member.id).roles.add('1149002129147703316')
+                await guild.members.cache.get(member.id).roles.add('1149002129147703316')
                 await msg.channel.send("인증되었습니다. 감사합니다.")
                 await client.channels.cache.get(channels_log).send({
                   content: `<@${member.id}>님의 미자검사 결과, 성인입니다.`,
@@ -535,7 +532,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
                     isPass: false
                   },
                 })
-                const user = guild.members.cache.get(member.id).roles.add(rules_NoAdult)
+                await guild.members.cache.get(member.id).roles.add(rules_NoAdult)
                 await msg.channel.send("isbn 코드가 달라 인증에 실패하였습니다.")
                 await client.channels.cache.get(channels_log).send({
                   content: `<@${member.id}>님의 미자검사 결과, 미자입니다. ( 사유 : isbn 코드 불일치 )`,
@@ -552,7 +549,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
                   isPass: false
                 },
               })
-              const user = guild.members.cache.get(member.id).roles.add(rules_NoAdult)
+              await guild.members.cache.get(member.id).roles.add(rules_NoAdult)
               await msg.channel.send("시간 초과로 인해 인증이 실패하였습니다.")
               await client.channels.cache.get(channels_log).send({
                 content: `<@${member.id}>님의 미자검사 결과, 미자입니다. ( 사유 : 시간 초과 )`,
@@ -561,6 +558,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
               return
             })
           })
+        });
+        await client.channels.cache.get(channels_log).send({
+          content: `<@${member.id}>님의 미자검사를 진행합니다. 요청자 : <@${interaction.member.id}>`,
         });
         return;
       }
