@@ -595,6 +595,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
                   return
                 })
               } else {
+                channel.delete()
                 return
               }
               return
