@@ -88,7 +88,7 @@ client.on(Events.GuildMemberRemove, (member) => {
             isPass: false
           },
         })
-        await member.ban().then(() => {
+        await member.ban({reason: "미자 검사 회피"}).then(() => {
           client.channels.cache.get(channels_log).send({
             content: `<@${member.id}>님의 미자검사 결과, 미자입니다. ( 사유 : 미자 검사 회피 (나감) )`,
           });
@@ -473,23 +473,26 @@ client.on(Events.InteractionCreate, async (interaction) => {
               return
             }
           }).catch(async (e) => {
-            await clientDB.checkAdultList.update({
-              where: {
-                id
-              },
-              data: {
-                isPass: false
-              },
-            })
-            guild.members.cache.get(member.id).roles.add(rules_NoAdult).then(async (event) => {
-              await member.user.send("시간 초과로 인해 인증이 실패하였습니다.")
-              await client.channels.cache.get(channels_log).send({
-                content: `<@${member.id}>님의 미자검사 결과, 미자입니다. ( 사유 : 시간 초과 )`,
-              });
+            const userCheck = guild.members.cache.get(member.id)
+            if (userCheck !== undefined) {
+              await clientDB.checkAdultList.update({
+                where: {
+                  id
+                },
+                data: {
+                  isPass: false
+                },
+              })
+              await userCheck.roles.add(rules_NoAdult).then(async (event) => {
+                await member.user.send("시간 초과로 인해 인증이 실패하였습니다.")
+                await client.channels.cache.get(channels_log).send({
+                  content: `<@${member.id}>님의 미자검사 결과, 미자입니다. ( 사유 : 시간 초과 )`,
+                });
+                return
+              })
+            } else {
               return
-            }).catch(async (e) => {
-              return
-            })
+            }
           })
         }).catch(async (e) => {
           await interaction.editReply({content: `<@${member.id}>님은 개인DM을 허용하고 있지 않습니다. 티켓인증을 실행합니다.`, ephemeral: true})
@@ -572,26 +575,28 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 return
               }
             }).catch(async (e) => {
-              await clientDB.checkAdultList.update({
-                where: {
-                  id
-                },
-                data: {
-                  isPass: false
-                },
-              })
-              console.log(guild.members.cache.get(member.id))
-              guild.members.cache.get(member.id).roles.add(rules_NoAdult).then(async (e) => {
-                await msg.channel.send("시간 초과로 인해 인증이 실패하였습니다.")
-                await client.channels.cache.get(channels_log).send({
-                  content: `<@${member.id}>님의 미자검사 결과, 미자입니다. ( 사유 : 시간 초과 )`,
-                });
-                channel.delete().catch(async (error) => {
+              const userCheck = guild.members.cache.get(member.id)
+              
+              if (userCheck !== undefined) {
+                await clientDB.checkAdultList.update({
+                  where: {
+                    id
+                  },
+                  data: {
+                    isPass: false
+                  },
+                })
+                await userCheck.roles.add(rules_NoAdult).then(async (e) => {
+                  await msg.channel.send("시간 초과로 인해 인증이 실패하였습니다.")
+                  await client.channels.cache.get(channels_log).send({
+                    content: `<@${member.id}>님의 미자검사 결과, 미자입니다. ( 사유 : 시간 초과 )`,
+                  });
+                  channel.delete()
                   return
                 })
-              }).catch(async (error) => {
+              } else {
                 return
-              })
+              }
               return
             })
           })
