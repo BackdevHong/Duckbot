@@ -522,8 +522,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             ])
             const msg = await channel.send({embeds: [embed], files: [image]})
             const mention = await channel.send({content: `<@${member.id}>`})
-            // 1000 * 60 * 60 * 24
-            mention.channel.awaitMessages({max: 1, time: 10000, errors: ['time']}).then(async (c) => {
+            mention.channel.awaitMessages({max: 1, time: 1000 * 60 * 60 * 24, errors: ['time']}).then(async (c) => {
               const result = c.first().content
               if (result === String(randomBook.isbn)) {
                 await clientDB.checkAdultList.update({
