@@ -10,7 +10,11 @@ const commands = [
             .setDescription('미자를 검사할 대상을 선택하세요.')
             .setRequired(true)
         )
-        .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
+        .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers),
+        new SlashCommandBuilder()
+        .setName('티켓')
+        .setDescription('티켓 설정을 시작합니다.')
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
 ].map(command => command.toJSON());
 
 module.exports = {

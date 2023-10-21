@@ -8,7 +8,12 @@ const {
   Message,
   AttachmentBuilder,
   ChannelType,
-  PermissionFlagsBits
+  PermissionFlagsBits,
+  StringSelectMenuBuilder,
+  StringSelectMenuOptionBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  ActionRowBuilder,
 } = require("discord.js");
 const dotenv = require("dotenv");
 const express = require("express");
@@ -63,6 +68,7 @@ const channels_NoAdult = process.env.CHANNEL_NOADULT;
 const channels_Danger = process.env.CHANNEL_DANGER;
 const channels_Alert = process.env.CHANNEL_ALERT;
 const channels_log = process.env.CHANNEL_LOG;
+const channels_ticket = process.env.CHANNEL_TICKET
 
 
 registerCommands(process.env.TOKEN, process.env.CLIENT_ID, process.env.GUILD_ID)
@@ -77,9 +83,9 @@ client.on(Events.GuildMemberRemove, (member) => {
     if (!event) {
       return;
     } else {
-      if (event.isPass === "true" || event.isPass === "false") {
+      if (event.isPass === true || event.isPass === false) {
         return;
-      } else {
+      } else if (event.isPass === null || event.isPass === undefined ) {
         await clientDB.checkAdultList.update({
           where: {
             id: event.id
@@ -378,12 +384,83 @@ client.on(Events.ClientReady, async (client) => {
   }, 1000);
 });
 
-client.on(Events.InteractionCreate, async (interaction) => {
-  if (!interaction.isCommand()) return;
+// /**
+//  * 
+//  * @param {import("discord.js").Interaction} interaction 
+//  * @param {import('discord.js').Client} client 
+//  * @param {import('discord.js').User} user
+//  */
+// async function makeRoom(interaction, client, channelId, user) {
+//   const reply = await interaction.deferReply({ephemeral: true})
+//   const guild = client.guilds.cache.get(process.env.GUILD_ID)
+//   const category = guild.channels.cache.get(channelId)
 
-  await interaction.deferReply({ephemeral: true})
+//   if (!category) {
+//     await interaction.editReply({content: `카테고리가 존재하지 않습니다. 오류가 났습니다.`, ephemeral: true})
+//   }
+//   await guild.channels.create({
+//     name: `${user.displayName}님의 티켓`,
+//     type: ChannelType.GuildText,
+//   }).then(async (channel) => {
+//     channel.setParent(category)
+//     channel.permissionOverwrites.set([
+//       {
+//         id: user.id,
+//         allow: [PermissionFlagsBits.ReadMessageHistory, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ViewChannel]
+//       },
+//       {
+//         id: guild.roles.everyone,
+//         deny: [PermissionFlagsBits.ViewChannel]
+//       }
+//     ])
+//     let message;
+//     switch (interaction.values[0]) {
+//       case "봇 단건 외주 플랜":
+//         message = `1. 닉네임 : \n2. 제작하려는 봇의 이름 : \n3. 제작하려는 봇의 상세정보 : (상세히 적어주세요) \n4. 봇의 사용 목적 : (해킹, 범죄, 악용 가능성이 있는 목적은 받아들이지 않습니다.)`
+//         break;
+//       case "봇 호스팅 외주 플랜" :
+//         message = `1. 닉네임 : \n2. 제작하려는 봇의 이름 : \n3. 제작하려는 봇의 상세정보 : (상세히 적어주세요) \n4. 봇의 사용 목적 : (해킹, 범죄, 악용 가능성이 있는 목적은 받아들이지 않습니다.)`
+//         break;
+//       case "봇 호스팅 + DB 외주 플랜" :
+//         message = `1. 닉네임 : \n2. 제작하려는 봇의 이름 : \n3. 제작하려는 봇의 상세정보 : (상세히 적어주세요) \n4. 봇의 사용 목적 : (해킹, 범죄, 악용 가능성이 있는 목적은 받아들이지 않습니다.)`
+//         break;
+//       case "봇 호스팅 플랜" :
+//         message = `1. 닉네임 : \n2. 봇 파일 소유 여부 : (Y/N)`
+//         break;
+//       case "서버 제작 플랜" :
+//         message = `1. 닉네임 : \n2. 제작하고 싶은 서버의 타입: (일반/커뮤니티) \n3. 제작하고 싶은 서버에 목적: (게임, 커뮤니티 등 여러가지 가능 단, 범죄 목적은 사용 불가)`
+//         break
+//     }
+//     const embed = new EmbedBuilder()
+//       .setTitle(`${interaction.values[0]} 주문 티켓`)
+//       .setDescription(`[${interaction.values[0]}]을 주문하기 위해 문의주셔서 감사합니다. 아래 양식을 적고 기다려주세요.`)
+//       .addFields({
+//         name: "양식",
+//         value: `${message}`
+//       })
+//       .setTimestamp()
+    
+//     const button = new ButtonBuilder()
+//       .setCustomId('closed')
+//       .setLabel('삭제')
+//       .setStyle(ButtonStyle.Danger)
+//       .setEmoji('🗑️')
+
+//     const row = new ActionRowBuilder()
+//       .addComponents(button)
+//     await channel.send({content: `<@${user.id}>, <@670174423071850526>`, embeds: [embed], components: [row]})
+//   })
+//   await interaction.editReply({content: `방이 생성되었습니다.`, ephemeral: true})
+// }
+
+
+client.on(Events.InteractionCreate, async (interaction) => {
+  if (!interaction.isCommand()) {
+    return
+  }
 
   if (interaction.commandName === "미자") {
+    await interaction.deferReply({ephemeral: true})
     const member = interaction.options.getMember('검사대상')
     if (!member) {
       await interaction.editReply({content: "대상 플레이어를 적어주세요!", ephemeral: true})
