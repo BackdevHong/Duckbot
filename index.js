@@ -40,6 +40,10 @@ server.listen(3001, () => {
   console.log("server start");
 });
 
+app.get('/', (req, res) => {
+  res.send('<h1>Bot Online :)</h1>')
+})
+
 dotenv.config();
 
 const client = new Client({
@@ -561,7 +565,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
                 },
               })
               await userCheck.roles.add(rules_NoAdult).then(async (event) => {
-                await member.user.send("시간 초과로 인해 인증이 실패하였습니다.")
+                member.user.send("시간 초과로 인해 인증이 실패하였습니다.").catch((error) => {
+                  return;
+                })
                 await client.channels.cache.get(channels_log).send({
                   content: `<@${member.id}>님의 미자검사 결과, 미자입니다. ( 사유 : 시간 초과 )`,
                 });
