@@ -201,7 +201,10 @@ client.on(Events.MessageCreate, async (message) => {
 
   if (message.guildId === guild.id) {
     if (message.content.startsWith("암살아")) {
-      if (message.channel.id === adultchannel.id) await message.delete();
+      if (message.channel.id === adultchannel.id) {
+        await message.delete();
+        return;
+      }
       if (message.author.bot) return;
       if (
         message.content.includes("스벨트") ||
