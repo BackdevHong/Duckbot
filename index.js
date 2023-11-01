@@ -200,11 +200,6 @@ client.on(Events.MessageCreate, async (message) => {
   }).first()
 
   if (message.guildId === guild.id) {
-    if (message.channelId === adultchannel.id) {
-      if (message.attachments.size <= 0) {
-        await message.delete()
-      }
-    }
     if (message.content.startsWith("암살아")) {
       if (message.author.bot) return;
       if (
@@ -290,6 +285,11 @@ client.on(Events.MessageCreate, async (message) => {
           : message.member.user.username,
         content: message.content,
       });
+    }
+    if (message.channelId === adultchannel.id) {
+      if (message.attachments.size <= 0) {
+        await message.delete()
+      }
     }
   }
 });
