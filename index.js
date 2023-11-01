@@ -190,7 +190,6 @@ client.on(Events.ThreadUpdate, async (oldThread, newThread) => {
 });
 
 client.on(Events.MessageCreate, async (message) => {
-  if (message.author.bot) return;
   const guild = client.guilds.cache.get(process.env.GUILD_ID);
   const cate = guild.channels.cache.get("1031135343853965362")
 
@@ -207,6 +206,7 @@ client.on(Events.MessageCreate, async (message) => {
       }
     }
     if (message.content.startsWith("암살아")) {
+      if (message.author.bot) return;
       if (
         message.content.includes("스벨트") ||
         message.content.includes("리액트")
