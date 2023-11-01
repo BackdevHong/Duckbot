@@ -192,8 +192,20 @@ client.on(Events.ThreadUpdate, async (oldThread, newThread) => {
 client.on(Events.MessageCreate, async (message) => {
   if (message.author.bot) return;
   const guild = client.guilds.cache.get(process.env.GUILD_ID);
+  const cate = guild.channels.cache.get("1031135343853965362")
+
+  const adultchannel = client.channels.cache.filter((channel, idx) => {
+    if (channel.name === "🔞야짤방" && channel.parentId === cate.id) {
+      return true
+    }
+  }).first()
 
   if (message.guildId === guild.id) {
+    if (message.channelId === adultchannel.id) {
+      if (message.attachments.size <= 0) {
+        await message.delete()
+      }
+    }
     if (message.content.startsWith("암살아")) {
       if (
         message.content.includes("스벨트") ||
@@ -710,6 +722,7 @@ setInterval(async () => {
   guild.channels.create({
     name: `🔞야짤방`,
     type: ChannelType.GuildText,
+    nsfw: true
 
   }).then(async (channel) => {
     channel.setParent(cate)
