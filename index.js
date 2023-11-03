@@ -686,7 +686,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
                   },
                 })
                 await userCheck.roles.add(rules_NoAdult).then(async (e) => {
-                  await msg.channel.send("시간 초과로 인해 인증이 실패하였습니다.")
                   await client.channels.cache.get(channels_log).send({
                     content: `<@${member.id}>님의 미자검사 결과, 미자입니다. ( 사유 : 시간 초과 )`,
                   });
