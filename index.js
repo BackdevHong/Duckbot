@@ -292,7 +292,11 @@ client.on(Events.MessageCreate, async (message) => {
     }
     if (message.channelId === adultchannel.id) {
       if (message.attachments.size <= 0) {
-        await message.delete()
+        message.delete().catch(async (error) => {
+          await client.channels.cache.get("1171357457147232346").send({
+            content: `오류가 발생하여 야짤방의 메시지를 삭제할 수 없습니다. 에러내용 : ${error.message}`,
+          });
+        })
       }
     }
   }
@@ -706,7 +710,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
           });
           return;
         } catch (error) {
-          await client.channels.cache.get(channels_log).send({
+          await client.channels.cache.get("1171357457147232346").send({
             content: `모종의 오류가 발생했습니다. 오류 내용 : ${error.message}`
           })
         }
