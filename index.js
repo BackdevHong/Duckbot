@@ -702,7 +702,12 @@ client.on(Events.InteractionCreate, async (interaction) => {
                     await client.channels.cache.get(channels_log).send({
                       content: `<@${member.id}>님의 미자검사 결과, 미자입니다. ( 사유 : 시간 초과 )`,
                     });
-                    await channel.delete()
+                    await channel.delete().catch(async (error) => {
+                      await client.channels.cache.get(channels_log).send({
+                        content: `알 수 없는 오류가 발생했습니다. 오류 : ${error.message}`,
+                      });
+                      return
+                    })
                     return
                   })
                 } else {
