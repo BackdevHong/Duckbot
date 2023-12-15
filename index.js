@@ -733,29 +733,4 @@ client.on(Events.InteractionCreate, async (interaction) => {
   }
 })
 
-setInterval(async () => {
-  const guild = client.guilds.cache.get(process.env.GUILD_ID)
-  const cate = guild.channels.cache.get("1031135343853965362")
-  const channel = client.channels.cache.filter((channel, idx) => {
-    if (channel.name === "🔞야짤방" && channel.parentId === cate.id) {
-      return true
-    }
-  }).first()
-
-  if (!channel) {
-    console.log('error')
-  }
-
-  guild.channels.create({
-    name: `🔞야짤방`,
-    type: ChannelType.GuildText,
-    nsfw: true
-
-  }).then(async (channel) => {
-    channel.setParent(cate)
-  })
-  
-  channel.delete("2주에 1번 초기화")
-}, 1209600000)
-
 client.login(process.env.TOKEN);
