@@ -282,14 +282,6 @@ client.on(Events.MessageCreate, async (message) => {
       const randomValue = strArray[Math.floor(Math.random() * strArray.length)];
       message.reply({ content: randomValue });
     }
-    if (message.channelId === "1102195345527676968") {
-      io.emit("data", {
-        username: message.member.nickname
-          ? message.member.nickname
-          : message.member.user.username,
-        content: message.content,
-      });
-    }
     if (message.channelId === adultchannel.id) {
       if (message.attachments.size <= 0) {
         message.delete().catch(async (error) => {
