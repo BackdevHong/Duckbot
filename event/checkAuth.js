@@ -247,13 +247,10 @@ module.exports = {
       } else if (type === Type.CHECK_RETRY) {
         try {
           let id;
-          clientDB.checkAdultList.create({
-            data: {
-              userId: user.id,
-              bookISBN: String(randomBook.isbn)
+          const checkUser = await clientDB.checkAdultList.findFirst({
+            where: {
+              userId: user.id
             }
-          }).then((e) => {
-            id = e.id
           })
   
           const image = new AttachmentBuilder('./assets/desc.png', {name: 'desc.png'});
@@ -290,7 +287,9 @@ module.exports = {
                     retry: false
                   },
                 })
+                await guild.members.cache.get(user.id).roles.remove('1144269909405225021')
                 await guild.members.cache.get(user.id).roles.add('1149002129147703316')
+                await guild.members.cache.get(user.id).roles.add('980761785147748373')
                 await user.user.send("인증되었습니다. 감사합니다.")
                 await client.channels.cache.get(channels_log).send({
                   content: `<@${user.id}>님의 미자검사 재인증 결과, 성인입니다.`,
@@ -303,10 +302,9 @@ module.exports = {
                   },
                   data: {
                     isPass: false,
-                    retry: true
+                    retry: false
                   },
                 })
-                await guild.members.cache.get(user.id).roles.add(rules_NoAdult)
                 await user.user.send("isbn 코드가 달라 인증에 실패하였습니다.")
                 await client.channels.cache.get(channels_log).send({
                   content: `<@${user.id}>님의 미자검사 재인증 결과, 미자입니다. ( 사유 : isbn 코드 불일치 )`,
@@ -322,18 +320,15 @@ module.exports = {
                   },
                   data: {
                     isPass: false,
-                    retry: true
+                    retry: false
                   },
                 })
-                await userCheck.roles.add(rules_NoAdult).then(async (event) => {
-                  user.user.send("시간 초과로 인해 재인증이 실패하였습니다.").catch((error) => {
-                    return;
-                  })
-                  await client.channels.cache.get(channels_log).send({
-                    content: `<@${user.id}>님의 미자검사 재인증 결과, 미자입니다. ( 사유 : 시간 초과 )`,
-                  });
-                  return
-                })
+
+                await user.user.send("시간 초과로 인해 재인증이 실패하였습니다.")
+
+                await client.channels.cache.get(channels_log).send({
+                  content: `<@${user.id}>님의 미자검사 재인증 결과, 미자입니다. ( 사유 : 시간 초과 )`,
+                });
               } else {
                 return
               }
@@ -378,17 +373,17 @@ module.exports = {
                       retry: false
                     },
                   })
-                  guild.members.cache.get(user.id).roles.add('1149002129147703316').then(async (e) => {
-                    await msg.channel.send("인증되었습니다. 감사합니다.")
+                  await guild.members.cache.get(user.id).roles.remove('1144269909405225021')
+                  await guild.members.cache.get(user.id).roles.add('1149002129147703316')
+                  await guild.members.cache.get(user.id).roles.add('980761785147748373')
+                  await msg.channel.send("인증되었습니다. 감사합니다.")
+                  await client.channels.cache.get(channels_log).send({
+                    content: `<@${user.id}>님의 미자검사 재인증 결과, 성인입니다.`,
+                  });
+
+                  c.delete().catch(async (error) => {
                     await client.channels.cache.get(channels_log).send({
-                      content: `<@${user.id}>님의 미자검사 재인증 결과, 성인입니다.`,
-                    });
-                    channel.delete().catch((e) => {
-                      return
-                    })
-                  }).catch(async (error) => {
-                    await client.channels.cache.get(channels_log).send({
-                      content: `알 수 없는 오류가 발생했습니다. 오류 : ${error.message}`,
+                      content: `채널 삭제에 오류가 발생했습니다. 오류 : ${error.message}`,
                     });
                     return
                   })
@@ -400,18 +395,14 @@ module.exports = {
                     },
                     data: {
                       isPass: false,
-                      retry: true
+                      retry: false
                     },
                   })
-                  guild.members.cache.get(user.id).roles.add(rules_NoAdult).then(async (event) => {
-                    await msg.channel.send("isbn 코드가 달라 재인증에 실패하였습니다.")
-                    await client.channels.cache.get(channels_log).send({
-                      content: `<@${user.id}>님의 미자검사 재인증 결과, 미자입니다. ( 사유 : isbn 코드 불일치 )`,
-                    });
-                    channel.delete().catch((e) => {
-                      return
-                    })
-                  }).catch(async (error) => {
+                  await msg.channel.send("isbn 코드가 달라 재인증에 실패하였습니다.")
+                  await client.channels.cache.get(channels_log).send({
+                    content: `<@${user.id}>님의 미자검사 재인증 결과, 미자입니다. ( 사유 : isbn 코드 불일치 )`,
+                  });
+                  c.delete().catch(async (error) => {
                     await client.channels.cache.get(channels_log).send({
                       content: `알 수 없는 오류가 발생했습니다. 오류 : ${error.message}`,
                     });
@@ -429,26 +420,23 @@ module.exports = {
                     },
                     data: {
                       isPass: false,
-                      retry: true
+                      retry: false
                     },
                   })
-                  await userCheck.roles.add(rules_NoAdult).then(async (e) => {
+                  await client.channels.cache.get(channels_log).send({
+                    content: `<@${user.id}>님의 미자검사 재인증 결과, 미자입니다. ( 사유 : 시간 초과 )`,
+                  });
+                  await c.delete().catch(async (error) => {
                     await client.channels.cache.get(channels_log).send({
-                      content: `<@${user.id}>님의 미자검사 재인증 결과, 미자입니다. ( 사유 : 시간 초과 )`,
+                      content: `알 수 없는 오류가 발생했습니다. 오류 : ${error.message}`,
                     });
-                    await channel.delete().catch(async (error) => {
-                      await client.channels.cache.get(channels_log).send({
-                        content: `알 수 없는 오류가 발생했습니다. 오류 : ${error.message}`,
-                      });
-                      return
-                    })
                     return
                   })
+                  return
                 } else {
-                  await channel.delete()
+                  await c.delete()
                   return
                 }
-                return
               })
             })
           });
