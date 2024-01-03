@@ -247,14 +247,23 @@ module.exports = {
       } else if (type === Type.CHECK_RETRY) {
         try {
           let id;
+
+          await clientDB.checkAdultList.findFirst({
+            where: {
+              userId : user.id
+            }
+          }).then((v) => {
+            id = v.id
+          })
+
           await clientDB.checkAdultList.update({
             where: {
-              userId: user.id
+              id
             },
             data: {
               isPass: null,
               retry: null
-            },
+            }
           })
   
           const image = new AttachmentBuilder('./assets/desc.png', {name: 'desc.png'});
