@@ -9,6 +9,8 @@ const {
 } = require("discord.js");
 const { Type } = require("../enums/Type");
 
+const channels_log = process.env.CHANNEL_LOG;
+
 module.exports = {
   checkAge : async (user, interaction, client, type) => {
     const bookCount = books.books.length
