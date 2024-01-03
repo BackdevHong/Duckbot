@@ -16,12 +16,8 @@ module.exports = {
       if (userAlready.isPass === undefined || userAlready.isPass === null) {
         await interaction.editReply({content: `<@${user.id}>님은 이미 미자 검사를 받고있는 중입니다.`, ephemeral: true});
         return;
-      } else {
-        const isPassed = userAlready.isPass ? "인증됨" : "인증안됨"
-        await interaction.editReply({content: `<@${user.id}>님은 이미 미자 검사를 받으셨습니다. 결과 : ${isPassed}`, ephemeral: true});
-        return;
-      }
-    } else {
+      } 
+
       try {
         let id;
         clientDB.checkAdultList.create({
@@ -238,7 +234,6 @@ module.exports = {
           content: `모종의 오류가 발생했습니다. 오류 내용 : ${error.message}`
         })
       }
-      
     }
   }
 }
