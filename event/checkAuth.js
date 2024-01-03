@@ -33,7 +33,8 @@ module.exports = {
           clientDB.checkAdultList.create({
             data: {
               userId: user.id,
-              bookISBN: String(randomBook.isbn)
+              bookISBN: String(randomBook.isbn),
+              retry: null
             }
           }).then((e) => {
             id = e.id
