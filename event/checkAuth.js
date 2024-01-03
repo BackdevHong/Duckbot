@@ -1,6 +1,12 @@
 const { PrismaClient } = require("@prisma/client");
 const clientDB = new PrismaClient();
 const books = require('../book.json');
+const {
+  EmbedBuilder,
+  AttachmentBuilder,
+  ChannelType,
+  PermissionFlagsBits,
+} = require("discord.js");
 
 module.exports = {
   checkAge : async (user, interaction, client) => {
