@@ -262,8 +262,7 @@ module.exports = {
               id
             },
             data: {
-              isPass: null,
-              retry: null
+              isPass: null
             }
           })
   
