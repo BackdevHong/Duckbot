@@ -1,6 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const clientDB = new PrismaClient();
-const books = require('./book.json');
+const books = require('../book.json');
 
 module.exports = {
   checkAge : async (user, interaction, client) => {
