@@ -24,6 +24,7 @@ const clientDB = new PrismaClient();
 const books = require('./book.json')
 const schedule = require('node-schedule');
 const { checkAge } = require("./event/checkAuth");
+const { Type } = require("./enums/Type");
 
 const app = express();
 const server = http.createServer(app);
@@ -427,9 +428,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
         
         try {
           if (!userRetry) {
-            checkAge(member, interaction, client)
+            checkAge(member, interaction, client, Type.CHECK_FIRST)
           } else if (userRetry.retry === true || userRetry.retry === undefined || userRetry.retry === null) {
-            checkAge(member, interaction, client)
+            checkAge(member, interaction, client, Type.CHECK_RETRY)
           } else {
             interaction.editReply({
               content: "해당 사용자는 이미 미자 검사를 2번 진행했습니다."
