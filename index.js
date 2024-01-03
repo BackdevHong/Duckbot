@@ -421,7 +421,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
       } else {
         const userRetry = await clientDB.checkAdultList.findFirst({
           where: {
-            userId: user.id
+            userId: member.id
           }
         })
         
