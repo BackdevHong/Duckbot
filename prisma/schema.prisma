@@ -15,4 +15,5 @@ model CheckAdultList {
   userId String
   bookISBN String
   isPass Boolean?
+  retry Boolean?
 }

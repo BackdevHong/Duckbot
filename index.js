@@ -22,7 +22,8 @@ const { registerCommands } = require("./deploy-commands");
 const { PrismaClient } = require("@prisma/client");
 const clientDB = new PrismaClient();
 const books = require('./book.json')
-const schedule = require('node-schedule')
+const schedule = require('node-schedule');
+const { checkAge } = require("./event/checkAuth");
 
 const app = express();
 const server = http.createServer(app);
@@ -409,320 +410,38 @@ client.on(Events.ClientReady, async (client) => {
   }, 1000);
 });
 
-// /**
-//  * 
-//  * @param {import("discord.js").Interaction} interaction 
-//  * @param {import('discord.js').Client} client 
-//  * @param {import('discord.js').User} user
-//  */
-// async function makeRoom(interaction, client, channelId, user) {
-//   const reply = await interaction.deferReply({ephemeral: true})
-//   const guild = client.guilds.cache.get(process.env.GUILD_ID)
-//   const category = guild.channels.cache.get(channelId)
-
-//   if (!category) {
-//     await interaction.editReply({content: `카테고리가 존재하지 않습니다. 오류가 났습니다.`, ephemeral: true})
-//   }
-//   await guild.channels.create({
-//     name: `${user.displayName}님의 티켓`,
-//     type: ChannelType.GuildText,
-//   }).then(async (channel) => {
-//     channel.setParent(category)
-//     channel.permissionOverwrites.set([
-//       {
-//         id: user.id,
-//         allow: [PermissionFlagsBits.ReadMessageHistory, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ViewChannel]
-//       },
-//       {
-//         id: guild.roles.everyone,
-//         deny: [PermissionFlagsBits.ViewChannel]
-//       }
-//     ])
-//     let message;
-//     switch (interaction.values[0]) {
-//       case "봇 단건 외주 플랜":
-//         message = `1. 닉네임 : \n2. 제작하려는 봇의 이름 : \n3. 제작하려는 봇의 상세정보 : (상세히 적어주세요) \n4. 봇의 사용 목적 : (해킹, 범죄, 악용 가능성이 있는 목적은 받아들이지 않습니다.)`
-//         break;
-//       case "봇 호스팅 외주 플랜" :
-//         message = `1. 닉네임 : \n2. 제작하려는 봇의 이름 : \n3. 제작하려는 봇의 상세정보 : (상세히 적어주세요) \n4. 봇의 사용 목적 : (해킹, 범죄, 악용 가능성이 있는 목적은 받아들이지 않습니다.)`
-//         break;
-//       case "봇 호스팅 + DB 외주 플랜" :
-//         message = `1. 닉네임 : \n2. 제작하려는 봇의 이름 : \n3. 제작하려는 봇의 상세정보 : (상세히 적어주세요) \n4. 봇의 사용 목적 : (해킹, 범죄, 악용 가능성이 있는 목적은 받아들이지 않습니다.)`
-//         break;
-//       case "봇 호스팅 플랜" :
-//         message = `1. 닉네임 : \n2. 봇 파일 소유 여부 : (Y/N)`
-//         break;
-//       case "서버 제작 플랜" :
-//         message = `1. 닉네임 : \n2. 제작하고 싶은 서버의 타입: (일반/커뮤니티) \n3. 제작하고 싶은 서버에 목적: (게임, 커뮤니티 등 여러가지 가능 단, 범죄 목적은 사용 불가)`
-//         break
-//     }
-//     const embed = new EmbedBuilder()
-//       .setTitle(`${interaction.values[0]} 주문 티켓`)
-//       .setDescription(`[${interaction.values[0]}]을 주문하기 위해 문의주셔서 감사합니다. 아래 양식을 적고 기다려주세요.`)
-//       .addFields({
-//         name: "양식",
-//         value: `${message}`
-//       })
-//       .setTimestamp()
-    
-//     const button = new ButtonBuilder()
-//       .setCustomId('closed')
-//       .setLabel('삭제')
-//       .setStyle(ButtonStyle.Danger)
-//       .setEmoji('🗑️')
-
-//     const row = new ActionRowBuilder()
-//       .addComponents(button)
-//     await channel.send({content: `<@${user.id}>, <@670174423071850526>`, embeds: [embed], components: [row]})
-//   })
-//   await interaction.editReply({content: `방이 생성되었습니다.`, ephemeral: true})
-// }
-
-
 client.on(Events.InteractionCreate, async (interaction) => {
-  if (!interaction.isCommand()) {
-    return
-  }
-
-  if (interaction.commandName === "미자") {
-    await interaction.deferReply({ephemeral: true})
-    const member = interaction.options.getMember('검사대상')
-    if (!member) {
-      await interaction.editReply({content: "대상 플레이어를 적어주세요!", ephemeral: true})
-      return;
-    } else {
-      const bookCount = books.books.length
-      const randomBook = books.books[Math.floor(Math.random() * bookCount)]
-      const userAlready = await clientDB.checkAdultList.findFirst({
-        where: {
-          userId: member.id
-        }
-      })
-
-      if (userAlready) {
-        if (userAlready.isPass === undefined || userAlready.isPass === null) {
-          await interaction.editReply({content: `<@${member.id}>님은 이미 미자 검사를 받고있는 중입니다.`, ephemeral: true});
-          return;
-        } else {
-          const isPassed = userAlready.isPass ? "인증됨" : "인증안됨"
-          await interaction.editReply({content: `<@${member.id}>님은 이미 미자 검사를 받으셨습니다. 결과 : ${isPassed}`, ephemeral: true});
-          return;
-        }
+  if (interaction.isCommand()) {
+    if (interaction.commandName === "미자") {
+      await interaction.deferReply({ephemeral: true})
+      const member = interaction.options.getMember('검사대상')
+      if (!member) {
+        await interaction.editReply({content: "대상 플레이어를 적어주세요!", ephemeral: true})
+        return;
       } else {
-        try {
-          let id;
-          clientDB.checkAdultList.create({
-            data: {
-              userId: member.id,
-              bookISBN: String(randomBook.isbn)
-            }
-          }).then((e) => {
-            id = e.id
-          })
-
-          const image = new AttachmentBuilder('./assets/desc.png', {name: 'desc.png'});
-
-          const embed = new EmbedBuilder()
-            .setTitle("미성년자 인증 안내")
-            .setDescription(`오 이런! 당신은 미성년자 인증을 받아야 합니다!`)
-            .addFields(
-              {name: "인증은 어떻게 받나요?", value: `교보문고 사이트로 들어가 회원가입 및 로그인을 한 후, 아래 링크로 들어가 isbn 코드를 찾아 암살봇 DM으로 보내주시면 됩니다. ${randomBook.url}`, inline: true},
-              {name: "인증 제한 시간은요?", value: "인증 제한시간은 하루입니다. 하루가 지나면 자동으로 인증 실패 처리됩니다.", inline: true},
-              {name: "isbn 코드는 어디서 얻나요?", value: "isbn 코드는 아래 이미지처럼, 링크를 타고 스크롤을 조금 내리면 보이는 '기본정보'란에 적혀있습니다.", inline: true},
-              {name: "엥.. 안보이는데요?", value: "해당 링크는 성인인증을 한 계정이 아니면 책 정보를 볼 수 없게 되어있습니다. 그냥.. 아무 채팅이나 쳐서 빠르게 미자를 받아보세요!"}
-            )
-            .setImage('attachment://desc.png')
-            .setFooter({
-              text: '※ isbn 코드 이외의 다른 채팅을 치시면, 미자 처리되니 주의해주세요.'
-            })
-            
-
-          const guild = client.guilds.cache.get(process.env.GUILD_ID);
-
-          const msg = member.user.send({embeds: [embed], files: [image]}).then(async (v) => {
-            await interaction.editReply({content: "성공적으로 메시지를 보냈습니다.", ephemeral: true});
-
-            v.channel.awaitMessages({max: 1, time: 1000 * 60 * 60 * 24, errors: ['time']}).then(async (c) => {
-              const result = c.first().content
-              if (result === String(randomBook.isbn)) {
-                await clientDB.checkAdultList.update({
-                  where: {
-                    id
-                  },
-                  data: {
-                    isPass: true
-                  },
-                })
-                await guild.members.cache.get(member.id).roles.add('1149002129147703316')
-                await member.user.send("인증되었습니다. 감사합니다.")
-                await client.channels.cache.get(channels_log).send({
-                  content: `<@${member.id}>님의 미자검사 결과, 성인입니다.`,
-                });
-                return
-              } else {
-                await clientDB.checkAdultList.update({
-                  where: {
-                    id
-                  },
-                  data: {
-                    isPass: false
-                  },
-                })
-                await guild.members.cache.get(member.id).roles.add(rules_NoAdult)
-                await member.user.send("isbn 코드가 달라 인증에 실패하였습니다.")
-                await client.channels.cache.get(channels_log).send({
-                  content: `<@${member.id}>님의 미자검사 결과, 미자입니다. ( 사유 : isbn 코드 불일치 )`,
-                });
-                return
-              }
-            }).catch(async (e) => {
-              const userCheck = guild.members.cache.get(member.id)
-              if (userCheck !== undefined) {
-                await clientDB.checkAdultList.update({
-                  where: {
-                    id
-                  },
-                  data: {
-                    isPass: false
-                  },
-                })
-                await userCheck.roles.add(rules_NoAdult).then(async (event) => {
-                  member.user.send("시간 초과로 인해 인증이 실패하였습니다.").catch((error) => {
-                    return;
-                  })
-                  await client.channels.cache.get(channels_log).send({
-                    content: `<@${member.id}>님의 미자검사 결과, 미자입니다. ( 사유 : 시간 초과 )`,
-                  });
-                  return
-                })
-              } else {
-                return
-              }
-            })
-          }).catch(async (e) => {
-            await interaction.editReply({content: `<@${member.id}>님은 개인DM을 허용하고 있지 않습니다. 티켓인증을 실행합니다.`, ephemeral: true})
-            const ticket = guild.channels.cache.get("1163812106014040126")
-            if (!ticket) {
-              console.log("에러 발생, 카테고리 존재하지 않음")
-              return;
-            }
-
-            guild.channels.create({
-              name: `${member.displayName}님의 인증방`,
-              type: ChannelType.GuildText,
-              permissionOverwrites: [
-
-              ]
-            }).then(async (channel) => {
-              channel.setParent(ticket)
-              channel.permissionOverwrites.set([
-                {
-                  id: member.id,
-                  allow: [PermissionFlagsBits.ReadMessageHistory, PermissionFlagsBits.SendMessages, PermissionFlagsBits.ViewChannel]
-                },
-                {
-                  id: guild.roles.everyone,
-                  deny: [PermissionFlagsBits.ViewChannel]
-                }
-              ])
-              const msg = await channel.send({embeds: [embed], files: [image]})
-              const mention = await channel.send({content: `<@${member.id}>`})
-              mention.channel.awaitMessages({max: 1, time: 1000 * 60 * 60 * 24, errors: ['time']}).then(async (c) => {
-                const result = c.first().content
-                if (result === String(randomBook.isbn)) {
-                  await clientDB.checkAdultList.update({
-                    where: {
-                      id
-                    },
-                    data: {
-                      isPass: true
-                    },
-                  })
-                  guild.members.cache.get(member.id).roles.add('1149002129147703316').then(async (e) => {
-                    await msg.channel.send("인증되었습니다. 감사합니다.")
-                    await client.channels.cache.get(channels_log).send({
-                      content: `<@${member.id}>님의 미자검사 결과, 성인입니다.`,
-                    });
-                    channel.delete().catch((e) => {
-                      return
-                    })
-                  }).catch(async (error) => {
-                    await client.channels.cache.get(channels_log).send({
-                      content: `알 수 없는 오류가 발생했습니다. 오류 : ${error.message}`,
-                    });
-                    return
-                  })
-                  return
-                } else {
-                  await clientDB.checkAdultList.update({
-                    where: {
-                      id
-                    },
-                    data: {
-                      isPass: false
-                    },
-                  })
-                  guild.members.cache.get(member.id).roles.add(rules_NoAdult).then(async (event) => {
-                    await msg.channel.send("isbn 코드가 달라 인증에 실패하였습니다.")
-                    await client.channels.cache.get(channels_log).send({
-                      content: `<@${member.id}>님의 미자검사 결과, 미자입니다. ( 사유 : isbn 코드 불일치 )`,
-                    });
-                    channel.delete().catch((e) => {
-                      return
-                    })
-                  }).catch(async (error) => {
-                    await client.channels.cache.get(channels_log).send({
-                      content: `알 수 없는 오류가 발생했습니다. 오류 : ${error.message}`,
-                    });
-                    return
-                  })
-                  return
-                }
-              }).catch(async (e) => {
-                const userCheck = guild.members.cache.get(member.id)
-                
-                if (userCheck !== undefined) {
-                  await clientDB.checkAdultList.update({
-                    where: {
-                      id
-                    },
-                    data: {
-                      isPass: false
-                    },
-                  })
-                  await userCheck.roles.add(rules_NoAdult).then(async (e) => {
-                    await client.channels.cache.get(channels_log).send({
-                      content: `<@${member.id}>님의 미자검사 결과, 미자입니다. ( 사유 : 시간 초과 )`,
-                    });
-                    await channel.delete().catch(async (error) => {
-                      await client.channels.cache.get(channels_log).send({
-                        content: `알 수 없는 오류가 발생했습니다. 오류 : ${error.message}`,
-                      });
-                      return
-                    })
-                    return
-                  })
-                } else {
-                  await channel.delete()
-                  return
-                }
-                return
-              })
-            })
-          });
-          await client.channels.cache.get(channels_log).send({
-            content: `<@${member.id}>님의 미자검사를 진행합니다. 요청자 : <@${interaction.member.id}>`,
-          });
-          return;
-        } catch (error) {
-          await client.channels.cache.get("1171357457147232346").send({
-            content: `모종의 오류가 발생했습니다. 오류 내용 : ${error.message}`
-          })
-        }
+        const userRetry = await clientDB.checkAdultList.findFirst({
+          where: {
+            userId: user.id
+          }
+        })
         
-      }
+        try {
+          if (!userRetry) {
+            checkAge(member, interaction, client)
+          } else if (userRetry.retry === true || userRetry.retry === undefined || userRetry.retry === null) {
+            checkAge(member, interaction, client)
+          } else {
+            interaction.editReply({
+              content: "해당 사용자는 이미 미자 검사를 2번 진행했습니다."
+            })
+          }
+        } catch (error) {
+          interaction.editReply({
+            content: `오류가 발생했습니다. 오류 내용 : ${error.message}`
+          })
+        }   
     }
   }
-})
+}})
 
 client.login(process.env.TOKEN);
