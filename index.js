@@ -408,7 +408,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         console.log(e)
       })
 
-      console.log(inviteLink)
+      console.log(inviteLink.code)
     }
     if (interaction.commandName === "미자") {
       await interaction.deferReply({ephemeral: true})
