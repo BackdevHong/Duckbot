@@ -11,6 +11,10 @@ const commands = [
             .setRequired(true)
         )
         .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers),
+    new SlashCommandBuilder()
+        .setName('폭파')
+        .setDescription('링크를 재생성합니다')
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 ].map(command => command.toJSON());
 
 module.exports = {

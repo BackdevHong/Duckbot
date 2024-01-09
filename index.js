@@ -4,16 +4,7 @@ const {
   Events,
   EmbedBuilder,
   Partials,
-  AuditLogEvent,
-  Message,
-  AttachmentBuilder,
-  ChannelType,
-  PermissionFlagsBits,
-  StringSelectMenuBuilder,
-  StringSelectMenuOptionBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  ActionRowBuilder,
+  AuditLogEvent
 } = require("discord.js");
 const dotenv = require("dotenv");
 const express = require("express");
@@ -21,23 +12,11 @@ const http = require("http");
 const { registerCommands } = require("./deploy-commands");
 const { PrismaClient } = require("@prisma/client");
 const clientDB = new PrismaClient();
-const books = require('./book.json')
-const schedule = require('node-schedule');
 const { checkAge } = require("./event/checkAuth");
 const { Type } = require("./enums/Type");
-
+const config = require("./config.json")
 const app = express();
 const server = http.createServer(app);
-
-const io = require("socket.io")(server, {
-  cors: {
-    origin: "*",
-  },
-});
-
-io.on("connection", (socket) => {
-  console.log(`연결 완료 : ${socket.request.url}`);
-});
 
 server.listen(3001, () => {
   console.log("server start");
@@ -45,6 +24,12 @@ server.listen(3001, () => {
 
 app.get('/', (req, res) => {
   res.send('<h1>Bot Online :)</h1>')
+})
+
+app.get('/discord', (req, res) => {
+  res.send(`<script type="text/javascript">
+    location.href="${config.Link}";
+  </script>`)
 })
 
 dotenv.config();
@@ -413,6 +398,18 @@ client.on(Events.ClientReady, async (client) => {
 
 client.on(Events.InteractionCreate, async (interaction) => {
   if (interaction.isCommand()) {
+    if (interaction.commandName === "폭파") {
+      await interaction.deferReply({ephemeral: true})
+
+      const inviteLink = await interaction.channel.createInvite({
+        maxAge: 0,
+        maxUses: 0
+      }).catch((e) => {
+        console.log(e)
+      })
+
+      console.log(inviteLink)
+    }
     if (interaction.commandName === "미자") {
       await interaction.deferReply({ephemeral: true})
       const member = interaction.options.getMember('검사대상')
