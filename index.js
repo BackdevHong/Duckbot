@@ -412,6 +412,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
       const prevC = config
       config.Link = `https://discord.gg/${inviteLink.code}`
       fs.writeFileSync("./config.json", JSON.stringify(prevC))
+      await interaction.editReply({
+        content: "링크 재생성이 성공적으로 완료되었습니다."
+      })
     }
     if (interaction.commandName === "미자") {
       await interaction.deferReply({ephemeral: true})
