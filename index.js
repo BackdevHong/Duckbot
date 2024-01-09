@@ -193,7 +193,7 @@ client.on(Events.ThreadUpdate, async (oldThread, newThread) => {
 
 client.on(Events.MessageCreate, async (message) => {
   const guild = client.guilds.cache.get(process.env.GUILD_ID);
-  const cate = guild.channels.cache.get("1010916041385332788")
+  const cate = guild.channels.cache.get("1031135343853965362")
 
   const adultchannel = client.channels.cache.filter((channel, idx) => {
     if (channel.name === "🔞야짤방" && channel.parentId === cate.id) {
