@@ -336,7 +336,6 @@ module.exports = {
                     retry: false
                   },
                 })
-
                 await user.user.send("시간 초과로 인해 재인증이 실패하였습니다.")
 
                 await client.channels.cache.get(channels_log).send({
