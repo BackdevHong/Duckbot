@@ -416,6 +416,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         content: "링크 재생성이 성공적으로 완료되었습니다."
       })
     }
+    
     if (interaction.commandName === "미자") {
       await interaction.deferReply({ephemeral: true})
       const member = interaction.options.getMember('검사대상')
