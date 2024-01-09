@@ -17,6 +17,7 @@ const { Type } = require("./enums/Type");
 const config = require("./config.json")
 const app = express();
 const server = http.createServer(app);
+const fs = require("fs")
 
 server.listen(3001, () => {
   console.log("server start");
@@ -408,7 +409,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
         console.log(e)
       })
 
-      console.log(inviteLink.code)
+      const prevC = config
+      config.Link = `https://discord.gg/${inviteLink.code}`
+      fs.writeFileSync("./config.json", JSON.stringify(prevC))
     }
     if (interaction.commandName === "미자") {
       await interaction.deferReply({ephemeral: true})
