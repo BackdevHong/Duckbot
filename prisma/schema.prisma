@@ -14,6 +14,6 @@ model CheckAdultList {
   id Int @default(autoincrement()) @id
   userId String
   bookISBN String
-  isPass Boolean?
   retry Boolean?
+  isPass Boolean?
 }
