@@ -456,7 +456,6 @@ module.exports = {
         await client.channels.cache.get(channels_log).send({
           content: `<@${user.id}>님의 미자검사 재인증를 진행합니다. 요청자 : <@${interaction.user.id}>`,
         });
-        return;
       } catch (error) {
         await client.channels.cache.get("1171357457147232346").send({
           content: `모종의 오류가 발생했습니다. 오류 내용 : ${error.message}`
