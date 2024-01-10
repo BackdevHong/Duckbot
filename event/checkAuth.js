@@ -9,6 +9,8 @@ const {
 } = require("discord.js");
 const { Type } = require("../enums/Type");
 
+const rules_NoAdult = process.env.RULES_NOADULT;
+
 const channels_log = process.env.CHANNEL_LOG;
 
 module.exports = {
