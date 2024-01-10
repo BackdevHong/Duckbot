@@ -417,7 +417,7 @@ module.exports = {
                 await client.channels.cache.get(channels_log).send({
                   content: `<@${user.id}>님의 미자검사 재인증 결과, 미자입니다. ( 사유 : isbn 코드 불일치 )`,
                 });
-                c.delete().catch(async (error) => {
+                channel.delete().catch(async (error) => {
                   await client.channels.cache.get(channels_log).send({
                     content: `알 수 없는 오류가 발생했습니다. 오류 : ${error.message}`,
                   });
@@ -441,7 +441,7 @@ module.exports = {
                 await client.channels.cache.get(channels_log).send({
                   content: `<@${user.id}>님의 미자검사 재인증 결과, 미자입니다. ( 사유 : 시간 초과 )`,
                 });
-                await c.delete().catch(async (error) => {
+                await channel.delete().catch(async (error) => {
                   await client.channels.cache.get(channels_log).send({
                     content: `알 수 없는 오류가 발생했습니다. 오류 : ${error.message}`,
                   });
