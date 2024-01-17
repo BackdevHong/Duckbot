@@ -240,7 +240,7 @@ module.exports = {
           })
         });
         await client.channels.cache.get(channels_log).send({
-          content: `<@${user.id}>님의 미자검사 재인증을 진행합니다. 요청자 : <@${interaction.user.id}>`,
+          content: `<@${user.id}>님의 미자검사 인증을 진행합니다. 요청자 : <@${interaction.user.id}>`,
         });
         return;
       } catch (error) {
