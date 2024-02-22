@@ -206,13 +206,12 @@ client.on(Events.MessageCreate, async (message) => {
           return;
         }
 
-      const pc = new AttachmentBuilder('./assets/PcImage.png')
-      const mobile = new AttachmentBuilder('./assets/MobileImage.png')
-      const content = "이 멘션도 금지지만 이미지에 있는 답장 멘션 도 서버 경고 사항입니다! 조심해주세요" 
+      const mention = new AttachmentBuilder('./assets/mention.png')
+      const content = "이 멘션도 금지지만 이미지에 있는 답장 멘션도 서버 경고 사항입니다! 조심해주세요" 
       + `\n${blockQuote("원숭이도 이해할 수 있는 이미지 설명")}`
       return message.reply({
         content: content,
-        files: [pc, mobile]
+        files: [mention]
       })
     }
     if (message.content.startsWith("암살아")) {
