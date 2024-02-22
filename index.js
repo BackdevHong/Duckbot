@@ -188,6 +188,9 @@ client.on(Events.MessageCreate, async (message) => {
   }).first()
 
   if (message.guildId === guild.id) {
+    if (message.content.includes("멘션")){
+      message.reply("테스트")
+    }
     if (message.content.startsWith("암살아")) {
       if (message.channel.id === adultchannel.id) {
         await message.delete();
@@ -313,6 +316,10 @@ client.on(Events.GuildMemberUpdate, (oldMember, newMember) => {
     if (oldRules.cache.has(rules_NoAdult)) {
       oldRules.remove(rules_NoAdult);
     }
+
+    client.channels.cache.get(channels_Babo).send({
+      content: `<@${newMember.user.id}> 님이 바보 판정을 받았습니다.`,
+    });
   }
 
   // 경고 해제
@@ -448,5 +455,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
   }
 }})
+
+setInterval(() => {
+
+}, 2000)
 
 client.login(process.env.TOKEN);

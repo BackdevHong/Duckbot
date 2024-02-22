@@ -322,6 +322,7 @@ module.exports = {
                 },
               })
               await user.user.send("isbn 코드가 달라 인증에 실패하였습니다.")
+              await guild.members.cache.get(user.id).roles.add('1144269909405225021')
               await client.channels.cache.get(channels_log).send({
                 content: `<@${user.id}>님의 미자검사 재인증 결과, 미자입니다. ( 사유 : isbn 코드 불일치 )`,
               });
@@ -340,7 +341,7 @@ module.exports = {
                 },
               })
               await user.user.send("시간 초과로 인해 재인증이 실패하였습니다.")
-
+              await guild.members.cache.get(user.id).roles.add('1144269909405225021')
               await client.channels.cache.get(channels_log).send({
                 content: `<@${user.id}>님의 미자검사 재인증 결과, 미자입니다. ( 사유 : 시간 초과 )`,
               });
