@@ -7,7 +7,8 @@ const {
   AuditLogEvent,
   AttachmentBuilder,
   blockQuote,
-  inlineCode
+  inlineCode,
+  bold
 } = require("discord.js");
 const dotenv = require("dotenv");
 const express = require("express");
@@ -209,7 +210,7 @@ client.on(Events.MessageCreate, async (message) => {
 
       const mention = new AttachmentBuilder('./assets/mention.png')
       const content = "이 멘션도 금지지만 이미지에 있는 답장 멘션도 서버 경고 사항입니다! 조심해주세요" 
-      + `\n${inlineCode("원숭이도 이해할 수 있는 이미지 설명")}`
+      + `\n${bold("원숭이도 이해할 수 있는 이미지 설명")}`
       return message.reply({
         content: content,
         files: [mention]
