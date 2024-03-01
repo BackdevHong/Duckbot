@@ -194,7 +194,7 @@ client.on(Events.MessageCreate, async (message) => {
 
   if (message.guildId === guild.id) {
     if (message.type == MessageType.Reply) {
-      console.log(message.users)
+      console.log(message.mentions)
     }
 
     if (message.content.includes("<@") || message.content.includes("멘션")){
