@@ -192,7 +192,7 @@ client.on(Events.MessageCreate, async (message) => {
   }).first()
 
   if (message.guildId === guild.id) {
-    if (message.content.includes("<@")){
+    if (message.content.includes("<@") || message.content.includes("멘션")){
       if (message.author.bot) {
         return;
       }
@@ -200,13 +200,6 @@ client.on(Events.MessageCreate, async (message) => {
       const guild = client.guilds.cache.get(process.env.GUILD_ID);
 
       let res = await guild.members.fetch(message.author.id);
-
-      if (
-        res.roles.cache.has("1015160481528430602") || 
-        res.roles.cache.has("1027637768878305332") ||
-        res.roles.cache.has("980760999453933568")) {
-          return;
-        }
 
       const mention = new AttachmentBuilder('./assets/mention.png')
       const content = `이 ${bold("멘션")}도 ${bold("금지")}지만 이미지에 있는 ${bold("답장 멘션")}도 ${bold("서버 경고 사항입니다!")} 조심해주세요` 
