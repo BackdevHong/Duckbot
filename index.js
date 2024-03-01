@@ -192,13 +192,12 @@ client.on(Events.MessageCreate, async (message) => {
   }).first()
 
   if (message.guildId === guild.id) {
+    console.log(message.type)
+    console.log(message.mentions)
     if (message.content.includes("<@") || message.content.includes("멘션")){
       if (message.author.bot) {
         return;
       }
-
-      console.log(message.type)
-      console.log(message.mentions)
 
       const guild = client.guilds.cache.get(process.env.GUILD_ID);
 
