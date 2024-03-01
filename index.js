@@ -194,6 +194,9 @@ client.on(Events.MessageCreate, async (message) => {
 
   if (message.guildId === guild.id) {
     if (message.type == MessageType.Reply) {
+      if (message.author.bot) {
+        return;
+      }
       if (message.mentions.members.first() !== undefined || message.mentions.members.first() !== null) {
         const mention = new AttachmentBuilder('./assets/mention.png')
         const content = `이 ${bold("답장 멘션")}은 ${bold("서버 경고 사항입니다!")} 조심해주세요` 
