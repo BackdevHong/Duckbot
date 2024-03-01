@@ -8,7 +8,8 @@ const {
   AttachmentBuilder,
   blockQuote,
   inlineCode,
-  bold
+  bold,
+  MessageType
 } = require("discord.js");
 const dotenv = require("dotenv");
 const express = require("express");
@@ -192,8 +193,10 @@ client.on(Events.MessageCreate, async (message) => {
   }).first()
 
   if (message.guildId === guild.id) {
-    console.log(message.type)
-    console.log(message.mentions)
+    if (message.type == MessageType.Reply) {
+      console.log(message.users)
+    }
+
     if (message.content.includes("<@") || message.content.includes("멘션")){
       if (message.author.bot) {
         return;
@@ -211,6 +214,7 @@ client.on(Events.MessageCreate, async (message) => {
         files: [mention]
       })
     }
+
     if (message.content.startsWith("암살아")) {
       if (message.channel.id === adultchannel.id) {
         await message.delete();
