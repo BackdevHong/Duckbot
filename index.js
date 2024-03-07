@@ -219,6 +219,7 @@ client.on(Events.MessageCreate, async (message) => {
     }
 
     if (message.content.includes("멘션")) {
+      if (message.author.bot) return;
       const mention = new AttachmentBuilder('./assets/mention.png')
       const content = `이미지에 있는 ${bold("답장 멘션")}은 ${bold("서버 경고 사항입니다!")} 조심해주세요` 
       + `\n${inlineCode("원숭이도 이해할 수 있는 이미지 설명")}`
