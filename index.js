@@ -193,27 +193,11 @@ client.on(Events.MessageCreate, async (message) => {
   }).first()
 
   if (message.guildId === guild.id) {
-    if (message.type == MessageType.Reply) {
-      if (message.author.bot) {
-        return;
-      }
-      if (message.mentions.members.first() !== undefined || message.mentions.members.first() !== null) {
-        const mention = new AttachmentBuilder('./assets/mention.png')
-        const content = `이 ${bold("답장 멘션")}은 ${bold("서버 경고 사항입니다!")} 조심해주세요` 
-        + `\n${inlineCode("원숭이도 이해할 수 있는 이미지 설명")}`
-        return message.reply({
-          content: content,
-          files: [mention]
-        })
-      }
-    }
-
     if (message.content.includes("<@")){
-
       if (message.author.bot) {
         return;
       }
-
+      
       const guild = client.guilds.cache.get(process.env.GUILD_ID);
 
       let res = await guild.members.fetch(message.author.id);
@@ -226,7 +210,7 @@ client.on(Events.MessageCreate, async (message) => {
         }
 
       const mention = new AttachmentBuilder('./assets/mention.png')
-      const content = `이 ${bold("멘션")}도 ${bold("금지")}지만 이미지에 있는 ${bold("답장 멘션")}도 ${bold("서버 경고 사항입니다!")} 조심해주세요` 
+      const content = `이 ${inlineCode("멘션")}은 ${bold("서버 경고 사항")}입니다. 이미지 참고해주세요.` 
       + `\n${inlineCode("원숭이도 이해할 수 있는 이미지 설명")}`
       return message.reply({
         content: content,
@@ -236,7 +220,7 @@ client.on(Events.MessageCreate, async (message) => {
 
     if (message.content.includes("멘션")) {
       const mention = new AttachmentBuilder('./assets/mention.png')
-      const content = `이 ${bold("멘션")}도 ${bold("금지")}지만 이미지에 있는 ${bold("답장 멘션")}도 ${bold("서버 경고 사항입니다!")} 조심해주세요` 
+      const content = `이미지에 있는 ${bold("답장 멘션")}은 ${bold("서버 경고 사항입니다!")} 조심해주세요` 
       + `\n${inlineCode("원숭이도 이해할 수 있는 이미지 설명")}`
       return message.reply({
         content: content,
