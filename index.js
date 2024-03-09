@@ -497,7 +497,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
       const members = interaction.guild.members
       const m100 = members.cache.random(100)
 
-      console.log(m100)
+      console.log(m100.toString())
     }
   }
 }})
