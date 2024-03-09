@@ -493,9 +493,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
 
     if (interaction.commandName === "바보") {
-      await interaction.deferReply({ephemeral: true})
-      const members = interaction.guild.members
-      console.log(members)
+      console.log("테스트")
     }
   }
 }})
