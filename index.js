@@ -510,7 +510,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
         v.roles.add(role)
       })
       return interaction.editReply({
-        content: memberpick.map((v) => v.displayName).toString() + " 축하드립니다! 바보로 인증되셨습니다!"
+        content: memberpick.map((v) => v.displayName).toString() + "  에서 죄를 참회하지 않으면 영원히 바보라고 ♥ " + 
+        "\n허접청자들한테 죄를 참회한 걸 인증해 ♥"
       })
     }
 }})
