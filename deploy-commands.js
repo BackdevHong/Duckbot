@@ -15,6 +15,10 @@ const commands = [
         .setName('폭파')
         .setDescription('링크를 재생성합니다')
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+    new SlashCommandBuilder()
+        .setName("바보")
+        .setDescription("랜덤으로 100명의 바보를 지정합니다")
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
 ].map(command => command.toJSON());
 
 module.exports = {

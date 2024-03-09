@@ -491,6 +491,14 @@ client.on(Events.InteractionCreate, async (interaction) => {
           })
         }   
     }
+
+    if (interaction.commandName === "바보") {
+      await interaction.deferReply({ephemeral: true})
+      const members = interaction.guild.members
+      const m100 = members.cache.random(100)
+
+      console.log(m100)
+    }
   }
 }})
 
