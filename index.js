@@ -495,7 +495,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
     if (interaction.commandName === "바보") {
       await interaction.deferReply()
-      const memberpick = interaction.guild.members.cache.random()
+      const memberpick = interaction.guild.members.cache.random(5)
       const role = interaction.guild.roles.cache.find((v) => {v.id === "1140989896220233920"})
 
       memberpick.forEach((v) => {
