@@ -494,9 +494,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
     if (interaction.commandName === "바보") {
       await interaction.deferReply({ephemeral: true})
-      const members = interaction.guild.members.cache.random(100)
-
-      return interaction.editReply({content: members.toString()})
+      const members = interaction.guild.members
+      console.log(members)
     }
   }
 }})
