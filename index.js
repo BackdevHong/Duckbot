@@ -507,11 +507,13 @@ client.on(Events.InteractionCreate, async (interaction) => {
       const role = interaction.guild.roles.cache.find((v) => v.id === "1140989896220233920")
 
       memberpick.forEach((v) => {
+        interaction.channel.send({
+          content: `<@${v.id}>`
+        })
         v.roles.add(role)
       })
       return interaction.editReply({
-        content: memberpick.map((v) => v.displayName).toString() + "  에서 죄를 참회하지 않으면 영원히 바보라고 ♥ " + 
-        "\n허접청자들한테 죄를 참회한 걸 인증해 ♥"
+        content: "<#1214624711573504072>에서 죄를 참회하지 않으면 영원히 바보라고 ♥" + "\n" + blockQuote("암컷같이 쓰지 않으면 영원히 바보")
       })
     }
 }})
