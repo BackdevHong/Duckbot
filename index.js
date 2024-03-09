@@ -495,14 +495,22 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
     if (interaction.commandName === "바보") {
       await interaction.deferReply()
-      const memberpick = interaction.guild.members.cache.random(5)
+
+      const amount = interaction.options.getInteger("지정")
+      
+      if (amount <= 1) {
+        return interaction.editReply({
+          content: "지정 인원은 1보다 커야 합니다."
+        })
+      }
+      const memberpick = interaction.guild.members.cache.random(amount)
       const role = interaction.guild.roles.cache.find((v) => v.id === "1140989896220233920")
 
       memberpick.forEach((v) => {
         v.roles.add(role)
       })
       return interaction.editReply({
-        content: memberpick.map((v) => v.displayName).toString()
+        content: memberpick.map((v) => v.displayName).toString() + " 축하드립니다! 바보로 인증되셨습니다!"
       })
     }
 }})

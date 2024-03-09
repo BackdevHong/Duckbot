@@ -17,7 +17,13 @@ const commands = [
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     new SlashCommandBuilder()
         .setName("바보")
-        .setDescription("랜덤으로 100명의 바보를 지정합니다")
+        .setDescription("랜덤으로 바보를 지정합니다")
+        .addIntegerOption(option => 
+            option
+            .setName('지정')
+            .setDescription('바보를 몇 명 지정할까요? ( 2 ~ 100 )')
+            .setRequired(true)
+        )
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
 ].map(command => command.toJSON());
 
