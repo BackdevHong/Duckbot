@@ -490,12 +490,12 @@ client.on(Events.InteractionCreate, async (interaction) => {
             content: `오류가 발생했습니다. 오류 내용 : ${error.message}`
           })
         }   
+    
+      }
     }
-
     if (interaction.commandName === "바보") {
       console.log("테스트")
     }
-  }
 }})
 
 setInterval(() => {
