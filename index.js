@@ -497,7 +497,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
       await interaction.deferReply()
       const memberpick = interaction.guild.members.cache.random(100)
       return interaction.editReply({
-        content: memberpick.map((v) => v.displayName)
+        content: memberpick.map((v) => v.displayName).toString()
       })
     }
 }})
