@@ -499,7 +499,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
       const role = interaction.guild.roles.cache.find((v) => {v.id === "1140989896220233920"})
 
       memberpick.forEach((v) => {
-        v.roles.add(role)
+        v.roles.add(role.id)
       })
       return interaction.editReply({
         content: memberpick.map((v) => v.displayName).toString()
