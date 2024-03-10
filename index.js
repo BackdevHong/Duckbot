@@ -514,6 +514,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
           //   content: `<@${v.id}>`
           // })
           data.push(v)
+          console.log(data.toString())
         })
       })
 
