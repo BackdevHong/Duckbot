@@ -508,24 +508,15 @@ client.on(Events.InteractionCreate, async (interaction) => {
       }
       const memberpick = interaction.guild.members.cache.random(amount)
 
-      let process = new Promise((res, rej) => {
-        memberpick.forEach((v) => {
-          // interaction.channel.send({
-          //   content: `<@${v.id}>`
-          // })
-          data.push(v)
-          console.log(data.toString())
+      for(let ele of memberpick) {
+        interaction.channel.send({
+          content: `<@${ele.id}}>`
         })
-      })
+        ele.roles.add(role)
+      }
 
-      process.then(() => {
-        console.log(data)
-        // data.forEach((v) => {
-        //   v.roles.add(role)
-        // })
-        // return interaction.editReply({
-        //   content: `😥바보-해제에서 죄를 참회하지 않으면 영원히 바보라고 ♥` + "\n" + blockQuote("최대한 웃기게 쓰지 않으면 영원히 바보")
-        // })
+      return interaction.editReply({
+        content: `😥바보-해제에서 죄를 참회하지 않으면 영원히 바보라고 ♥` + "\n" + blockQuote("최대한 웃기게 쓰지 않으면 영원히 바보")
       })
     }
   }
