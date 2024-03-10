@@ -499,7 +499,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
       const role = interaction.guild.roles.cache.find((v) => v.id === "1140989896220233920")
       const data = []
 
-      const memberpick = interaction.guild.members.cache.filter((v) => v.roles.has(role))
+      const memberpick = interaction.guild.members.cache.filter((v) => v.roles.cache.has("1140989896220233920"))
       console.log(memberpick)
     }
   }
