@@ -517,7 +517,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         })
       })
 
-      process.then(() => {
+      await process.then(() => {
         console.log(data)
         // data.forEach((v) => {
         //   v.roles.add(role)
