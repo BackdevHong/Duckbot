@@ -517,15 +517,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
         })
       })
 
-      let process2 = new Promise((res, rej) => {
-        process.then(() => {
-          data.forEach((v) => {
-            v.roles.add(role)
-          })
+      process.then(() => {
+        data.forEach((v) => {
+          v.roles.add(role)
         })
-      })
-
-      await process2.then(() => {
         return interaction.editReply({
           content: `😥바보-해제에서 죄를 참회하지 않으면 영원히 바보라고 ♥` + "\n" + blockQuote("최대한 웃기게 쓰지 않으면 영원히 바보")
         })
