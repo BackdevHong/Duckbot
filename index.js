@@ -494,13 +494,13 @@ client.on(Events.InteractionCreate, async (interaction) => {
       }
     }
     if (interaction.commandName === "바보") {
-      const fuck = interaction.guild.members.cache.filter((v) => v.roles.cache.has("1216348648066256966"))
-      const role = interaction.guild.roles.cache.find((v) => v.id === "1216348648066256966")
-      const defaultRole = interaction.guild.roles.cache.find((v) => v.id === "980761785147748373")
+      await interaction.deferReply()
       
-      for (let user in fuck) {
-        user.roles.remove(role)
-      }
+      const role = interaction.guild.roles.cache.find((v) => v.id === "1140989896220233920")
+      const data = []
+
+      const memberpick = interaction.guild.members.cache.filter((v) => v.roles.has(role))
+      console.log(memberpick)
     }
   }
 })
