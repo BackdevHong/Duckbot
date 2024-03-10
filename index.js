@@ -501,11 +501,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
       const memberpick = interaction.guild.members
 
-      memberpick.removeRole({
-        role: role
-      })
-      memberpick.addRole({
-        role: defaultr
+      memberpick.cache.forEach((v) => {
+        v.roles.remove(role)
       })
     }
   }
