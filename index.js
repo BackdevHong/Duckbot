@@ -494,29 +494,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
       }
     }
     if (interaction.commandName === "바보") {
-      await interaction.deferReply()
-      
-      const role = interaction.guild.roles.cache.find((v) => v.id === "1216348648066256966")
-
-      const amount = interaction.options.getInteger("지정")
-      
-      if (amount <= 1) {
-        return interaction.editReply({
-          content: "지정 인원은 1보다 커야 합니다."
-        })
-      }
-      const memberpick = interaction.guild.members.cache.random(amount)
-
-      for(let ele of memberpick) {
-        interaction.channel.send({
-          content: `<@${ele.id}>`
-        })
-        ele.roles.add(role)
-      }
-
-      return interaction.editReply({
-        content: `😥바보-해제에서 죄를 참회하지 않으면 영원히 바보라고 ♥` + "\n" + blockQuote("최대한 웃기게 쓰지 않으면 영원히 바보")
-      })
+      const fuck = interaction.guild.members.cache.filter((v) => v.roles.cache.has("1216348648066256966"))
+      console.log(fuck.size)
     }
   }
 })
