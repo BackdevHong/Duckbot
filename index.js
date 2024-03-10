@@ -502,10 +502,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
       const warkerRole = interaction.guild.roles.cache.find((v) => v.id === "980761785147748373")
 
       memberall.cache.forEach((v) => {
-        if (v.roles.cache.has("1140989896220233920")) {
-          v.roles.remove(role)
-          v.roles.add(warkerRole)
-        }
+        v.roles.remove(role)
+        v.roles.add(warkerRole)
       })
 
       const amount = interaction.options.getInteger("지정")
