@@ -496,10 +496,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
     if (interaction.commandName === "바보") {
       await interaction.deferReply()
       
-      const role = interaction.guild.roles.cache.find((v) => v.id === "1140989896220233920")
+      const role = interaction.guild.roles.cache.find((v) => v.id === "1216348648066256966")
       const data = []
 
-      const memberpick = interaction.guild.members.cache.filter((v) => v.roles.cache.has("1140989896220233920"))
+      const memberpick = interaction.guild.members.cache.filter((v) => v.roles.cache.has("1216348648066256966"))
       console.log(memberpick)
     }
   }
