@@ -497,6 +497,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
       await interaction.deferReply()
       
       const role = interaction.guild.roles.cache.find((v) => v.id === "1140989896220233920")
+      const data = []
 
       const amount = interaction.options.getInteger("지정")
       
@@ -507,10 +508,26 @@ client.on(Events.InteractionCreate, async (interaction) => {
       }
       const memberpick = interaction.guild.members.cache.random(amount)
 
-      memberpick.forEach((v) => {
-        v.roles.add(role)
-        interaction.channel.send({
-          content: `<@${v.id}>`
+      let process = new Promise((res, rej) => {
+        memberpick.forEach((v) => {
+          interaction.channel.send({
+            content: `<@${v.id}>`
+          })
+          data.push(v)
+        })
+      })
+
+      let process2 = new Promise((res, rej) => {
+        process.then(() => {
+          data.forEach((v) => {
+            v.roles.add(role)
+          })
+        })
+      })
+
+      await process2.then(() => {
+        return interaction.editReply({
+          content: `😥바보-해제에서 죄를 참회하지 않으면 영원히 바보라고 ♥` + "\n" + blockQuote("최대한 웃기게 쓰지 않으면 영원히 바보")
         })
       })
     }
