@@ -497,28 +497,25 @@ client.on(Events.InteractionCreate, async (interaction) => {
       await interaction.deferReply()
       
       const role = interaction.guild.roles.cache.find((v) => v.id === "1140989896220233920")
-      console.log(role)
 
-      // const amount = interaction.options.getInteger("지정")
+      const amount = interaction.options.getInteger("지정")
       
-      // if (amount <= 1) {
-      //   return interaction.editReply({
-      //     content: "지정 인원은 1보다 커야 합니다."
-      //   })
-      // }
-      // const memberpick = interaction.guild.members.cache.random(amount)
+      if (amount <= 1) {
+        return interaction.editReply({
+          content: "지정 인원은 1보다 커야 합니다."
+        })
+      }
+      const memberpick = interaction.guild.members.cache.random(amount)
 
-      // memberpick.forEach((v) => {
-      //   interaction.channel.send({
-      //     content: `<@${v.id}>`
-      //   })
-      //   v.roles.add(role)
-      // })
-      // return interaction.editReply({
-      //   content: "<#1214624711573504072>에서 죄를 참회하지 않으면 영원히 바보라고 ♥" + "\n" + blockQuote("최대한 웃기게 쓰지 않으면 영원히 바보")
-      // })
+      memberpick.forEach((v) => {
+        v.roles.add(role)
+        interaction.channel.send({
+          content: `<@${v.id}>`
+        })
+      })
     }
-}})
+  }
+}
 
 setInterval(() => {
 
