@@ -497,10 +497,14 @@ client.on(Events.InteractionCreate, async (interaction) => {
       await interaction.deferReply()
       
       const role = interaction.guild.roles.cache.find((v) => v.id === "1216348648066256966")
-      const data = []
+      const defaultr = interaction.guild.roles.cache.find((v) => v.id === "980761785147748373")
 
       const memberpick = interaction.guild.members.cache.filter((v) => v.roles.cache.has("1216348648066256966"))
-      console.log(memberpick)
+
+      for (let i = 0; i <= memberpick.size; i++) {
+        memberpick.get(i).roles.remove(role)
+        memberpick.get(i).roles.add(defaultr)
+      }
     }
   }
 })
