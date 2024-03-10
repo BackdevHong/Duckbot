@@ -510,20 +510,21 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
       let process = new Promise((res, rej) => {
         memberpick.forEach((v) => {
-          interaction.channel.send({
-            content: `<@${v.id}>`
-          })
+          // interaction.channel.send({
+          //   content: `<@${v.id}>`
+          // })
           data.push(v)
         })
       })
 
       process.then(() => {
-        data.forEach((v) => {
-          v.roles.add(role)
-        })
-        return interaction.editReply({
-          content: `😥바보-해제에서 죄를 참회하지 않으면 영원히 바보라고 ♥` + "\n" + blockQuote("최대한 웃기게 쓰지 않으면 영원히 바보")
-        })
+        console.log(data)
+        // data.forEach((v) => {
+        //   v.roles.add(role)
+        // })
+        // return interaction.editReply({
+        //   content: `😥바보-해제에서 죄를 참회하지 않으면 영원히 바보라고 ♥` + "\n" + blockQuote("최대한 웃기게 쓰지 않으면 영원히 바보")
+        // })
       })
     }
   }
