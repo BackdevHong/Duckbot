@@ -496,6 +496,18 @@ client.on(Events.InteractionCreate, async (interaction) => {
     if (interaction.commandName === "바보") {
       await interaction.deferReply()
 
+      const memberall = interaction.guild.members
+
+      const role = interaction.guild.roles.cache.find((v) => v.id === "1140989896220233920")
+      const warkerRole = interaction.guild.roles.cache.find((v) => v.id === "980761785147748373")
+
+      memberall.cache.forEach((v) => {
+        if (v.roles.cache.has("1140989896220233920")) {
+          v.roles.remove(role)
+          v.roles.add(warkerRole)
+        }
+      })
+
       const amount = interaction.options.getInteger("지정")
       
       if (amount <= 1) {
@@ -504,7 +516,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
         })
       }
       const memberpick = interaction.guild.members.cache.random(amount)
-      const role = interaction.guild.roles.cache.find((v) => v.id === "1140989896220233920")
 
       memberpick.forEach((v) => {
         interaction.channel.send({
