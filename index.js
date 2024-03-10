@@ -515,10 +515,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
       })
     }
   }
-}
+})
 
-setInterval(() => {
-
-}, 2000)
 
 client.login(process.env.TOKEN);
