@@ -513,7 +513,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         v.roles.add(role)
       })
       return interaction.editReply({
-        content: "<#1214624711573504072>에서 죄를 참회하지 않으면 영원히 바보라고 ♥" + "\n" + blockQuote("암컷같이 쓰지 않으면 영원히 바보")
+        content: "<#1214624711573504072>에서 죄를 참회하지 않으면 영원히 바보라고 ♥" + "\n" + blockQuote("최대한 웃기게 쓰지 않으면 영원히 바보")
       })
     }
 }})
