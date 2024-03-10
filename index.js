@@ -510,7 +510,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
       for(let ele of memberpick) {
         interaction.channel.send({
-          content: `<@${ele.id}}>`
+          content: `<@${ele.id}>`
         })
         ele.roles.add(role)
       }
