@@ -497,7 +497,6 @@ client.on(Events.InteractionCreate, async (interaction) => {
       await interaction.deferReply()
       
       const role = interaction.guild.roles.cache.find((v) => v.id === "1216348648066256966")
-      const data = []
 
       const amount = interaction.options.getInteger("지정")
       
